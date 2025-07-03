@@ -16,22 +16,22 @@
         }
         
         body {
-            background: #121212; /* Default dark mode */
+            background: #121212;
             color: #fff;
             min-height: 100vh;
         }
         
-        body.light-mode { /* Class for light mode */
+        body.light-mode {
             background: #f5f5f5;
             color: #333;
         }
         
         .glass-effect {
-            background: rgba(255, 255, 255, 0.1); /* Adjusted for dark mode */
+            background: rgba(30, 30, 30, 0.8);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
             border-radius: 10px;
-            border: 1px solid rgba(255, 215, 0, 0.3);
+            border: 1px solid rgba(255, 215, 0, 0.2);
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
         }
         
@@ -152,6 +152,25 @@
             font-weight: bold;
             cursor: pointer;
             margin-top: 20px;
+            position: relative;
+        }
+        
+        .btn.loading .btn-text {
+            visibility: hidden;
+        }
+        
+        .btn.loading::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top: 3px solid #ffd700;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
         }
         
         .auth-toggle {
@@ -163,6 +182,42 @@
             color: #ffd700;
             text-decoration: underline;
             cursor: pointer;
+        }
+        
+        /* Processing Animation */
+        .processing-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            display: none;
+        }
+        
+        .processing-spinner {
+            width: 60px;
+            height: 60px;
+            border: 5px solid rgba(255, 215, 0, 0.3);
+            border-top: 5px solid #ffd700;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        .processing-text {
+            margin-top: 20px;
+            color: #ffd700;
+            font-size: 1.2rem;
+            text-align: center;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
         
         /* Main App Container */
@@ -317,7 +372,7 @@
             margin-bottom: 10px;
         }
         
-        .join-btn {
+        .view-more-btn {
             padding: 8px 15px;
             font-size: 0.9rem;
             background: linear-gradient(90deg, #ffd700, #ffaa00);
@@ -328,7 +383,7 @@
             width: 100%;
         }
         
-        .join-btn:hover {
+        .view-more-btn:hover {
             box-shadow: 0 0 10px rgba(255, 215, 0, 0.7);
         }
         
@@ -379,7 +434,7 @@
             align-items: center;
             font-size: 0.8rem;
             cursor: pointer;
-            color: #666; /* Default color */
+            color: #ffd700;
             text-decoration: none;
             padding: 5px 10px;
             border-radius: 5px;
@@ -387,15 +442,13 @@
         }
         
         body.light-mode .footer-icon {
-            color: #666; /* Default color in light mode */
-        }
-        body.dark-mode .footer-icon {
-            color: #aaa; /* Lighter gray for dark mode */
+            color: #ffd700;
         }
         
         .footer-icon.active {
-            color: #ffd700; /* Golden color for active icon */
+            color: #ffd700;
             border-color: rgba(255, 215, 0, 0.3);
+            background: rgba(255, 215, 0, 0.1);
         }
         
         .footer-icon:hover {
@@ -405,6 +458,7 @@
         .footer-icon i {
             font-size: 1.5rem;
             margin-bottom: 5px;
+            color: #ffd700;
         }
         
         /* Side Menu */
@@ -444,6 +498,7 @@
         .menu-item i {
             margin-right: 10px;
             font-size: 1.2rem;
+            color: #ffd700;
         }
         
         /* Wallet Page */
@@ -504,12 +559,12 @@
             font-weight: bold;
         }
         
-        .transaction-amount.positive {
-            color: #4CAF50; /* Green for positive */
+        .positive {
+            color: #4CAF50;
         }
         
-        .transaction-amount.negative {
-            color: #F44336; /* Red for negative */
+        .negative {
+            color: #F44336;
         }
         
         /* Profile Page */
@@ -519,17 +574,17 @@
         }
         
         .profile-avatar {
-            width: 80px;
-            height: 80px;
+            width: 100px;
+            height: 100px;
             border-radius: 50%;
             background-color: rgba(255, 215, 0, 0.2);
             display: flex;
             justify-content: center;
             align-items: center;
             margin: 0 auto 15px;
-            font-size: 2rem;
+            font-size: 2.5rem;
             color: #ffd700;
-            border: 1px solid rgba(255, 215, 0, 0.3);
+            border: 2px solid rgba(255, 215, 0, 0.5);
         }
         
         .profile-details {
@@ -537,34 +592,109 @@
         }
         
         .detail-item {
-            padding: 12px 0;
+            padding: 15px;
+            margin-bottom: 10px;
             border-bottom: 1px solid rgba(255, 215, 0, 0.1);
             display: flex;
             justify-content: space-between;
-            align-items: center; /* Align items vertically */
+            align-items: center;
         }
         
-        .detail-item span:first-child { /* Icons for labels */
+        .detail-item i {
             color: #ffd700;
             margin-right: 10px;
         }
-
-        /* Settings Page */
-        .settings-option {
+        
+        .detail-label {
+            display: flex;
+            align-items: center;
+        }
+        
+        .detail-value {
+            font-weight: bold;
+        }
+        
+        /* Live Page */
+        .live-stream {
+            padding: 20px;
+            margin: 15px;
+            text-align: center;
+            height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .live-stream i {
+            font-size: 3rem;
+            color: #ffd700;
+            margin-bottom: 15px;
+        }
+        
+        /* History Page */
+        .history-item {
             padding: 15px;
-            margin-bottom: 10px;
+            margin: 10px 15px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border: 1px solid rgba(255, 215, 0, 0.1);
         }
         
-        .language-select {
-            padding: 8px;
-            border-radius: 5px;
-            background: rgba(255, 255, 255, 0.1);
-            color: inherit;
-            border: 1px solid rgba(255, 215, 0, 0.3);
+        .history-item h3 {
+            color: #ffd700;
+            margin-bottom: 5px;
+        }
+        
+        .history-item p {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        /* Help Page */
+        .help-item {
+            padding: 15px;
+            margin: 10px 15px;
+        }
+        
+        .help-item h3 {
+            color: #ffd700;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .help-item h3 i {
+            margin-right: 10px;
+        }
+        
+        /* Tournament Details Page */
+        .tournament-detail-page {
+            padding: 15px;
+        }
+        
+        .tournament-detail-header {
+            text-align: center;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .tournament-detail-header i {
+            font-size: 3rem;
+            color: #ffd700;
+            margin-bottom: 15px;
+        }
+        
+        .match-type {
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .match-type h3 {
+            color: #ffd700;
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid rgba(255, 215, 0, 0.3);
         }
         
         /* Toggle Switch */
@@ -624,50 +754,34 @@
             z-index: 150;
             display: none;
         }
-
-        /* Specific page styles */
-        .help-item {
-            padding: 15px;
-            margin-bottom: 10px;
-        }
-        .help-item h3 {
+        
+        /* Back Button */
+        .back-btn {
+            padding: 8px 15px;
+            background: rgba(255, 215, 0, 0.1);
             color: #ffd700;
-            margin-bottom: 5px;
-        }
-        .help-item p {
-            font-size: 0.9rem;
-            opacity: 0.8;
-        }
-        .history-item {
-            padding: 15px;
-            margin-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .history-item div h3 {
-            color: #ffd700;
-            margin-bottom: 5px;
-        }
-        .history-item div p {
-            font-size: 0.8rem;
-            opacity: 0.7;
-        }
-        .live-stream {
-            padding: 30px 15px;
-            text-align: center;
-            font-size: 1.2rem;
-            color: #ffd700;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            border-radius: 5px;
+            cursor: pointer;
             margin-bottom: 15px;
-            display: flex;
+            display: inline-flex;
             align-items: center;
-            justify-content: center;
-            gap: 10px;
         }
-
+        
+        .back-btn i {
+            margin-right: 5px;
+        }
     </style>
 </head>
 <body>
+    <!-- Processing Overlay -->
+    <div class="processing-overlay" id="processing-overlay">
+        <div>
+            <div class="processing-spinner"></div>
+            <div class="processing-text">Processing...</div>
+        </div>
+    </div>
+    
     <!-- Splash Screen -->
     <div id="splash-screen">
         <h1 class="golden-text">PRO WAR</h1>
@@ -681,14 +795,16 @@
         <div class="auth-form glass-effect">
             <h2 class="golden-text" id="auth-title"><i class="fas fa-key"></i> LOGIN</h2>
             <div class="form-group">
-                <label for="username"><i class="fas fa-user"></i> Username</label>
-                <input type="text" id="username" placeholder="Enter your username">
+                <label for="email"><i class="fas fa-envelope"></i> Email</label>
+                <input type="email" id="email" placeholder="Enter your email">
             </div>
             <div class="form-group">
                 <label for="password"><i class="fas fa-lock"></i> Password</label>
                 <input type="password" id="password" placeholder="Enter your password">
             </div>
-            <button class="btn golden-btn" id="auth-btn"><i class="fas fa-rocket"></i> Login</button>
+            <button class="btn golden-btn" id="auth-btn">
+                <span class="btn-text"><i class="fas fa-rocket"></i> Login</span>
+            </button>
             <div class="auth-toggle">
                 Don't have an account? <span id="toggle-auth"><i class="fas fa-user-plus"></i> Sign Up</span>
             </div>
@@ -702,7 +818,7 @@
             <div class="menu-icon" id="menu-toggle"><i class="fas fa-bars"></i></div>
             <div class="app-title golden-text">PRO WAR</div>
             <div class="header-icons">
-                <span class="theme-toggle" id="theme-toggle"><i class="fas fa-moon"></i></span>
+                <span class="theme-toggle" id="theme-toggle"><i class="fas fa-sun"></i></span>
                 <span class="wallet-icon" id="wallet-btn"><i class="fas fa-wallet"></i></span>
                 <span class="profile-icon" id="profile-btn"><i class="fas fa-user"></i></span>
             </div>
@@ -713,9 +829,9 @@
             <!-- Sliding Banner -->
             <div class="banner-container glass-effect">
                 <div class="banner-slider" id="banner-slider">
-                    <div class="banner" style="background-image: url('https://via.placeholder.com/500x150/ffd700/000000?text=Promo+Banner+1');"></div>
-                    <div class="banner" style="background-image: url('https://via.placeholder.com/500x150/ffaa00/000000?text=Promo+Banner+2');"></div>
-                    <div class="banner" style="background-image: url('https://via.placeholder.com/500x150/ffff00/000000?text=Promo+Banner+3');"></div>
+                    <div class="banner"><i class="fas fa-ad"></i> Promo Banner 1</div>
+                    <div class="banner"><i class="fas fa-ad"></i> Promo Banner 2</div>
+                    <div class="banner"><i class="fas fa-ad"></i> Promo Banner 3</div>
                 </div>
             </div>
             
@@ -730,7 +846,7 @@
                     <div class="tournament-details">
                         <h3><i class="fas fa-user"></i> Solo Match</h3>
                         <p><i class="fas fa-rupee-sign"></i> Entry: ₹50 | <i class="fas fa-trophy"></i> Prize: ₹500 | <i class="fas fa-clock"></i> Starts in 2h 30m</p>
-                        <button class="join-btn"><i class="fas fa-gamepad"></i> Join Now</button>
+                        <button class="view-more-btn" data-game="Free Fire" data-type="Solo"><i class="fas fa-eye"></i> View More</button>
                     </div>
                 </div>
             </div>
@@ -746,7 +862,7 @@
                     <div class="tournament-details">
                         <h3><i class="fas fa-users"></i> Squad Match</h3>
                         <p><i class="fas fa-rupee-sign"></i> Entry: ₹200 | <i class="fas fa-trophy"></i> Prize: ₹2000 | <i class="fas fa-clock"></i> Starts in 3h 15m</p>
-                        <button class="join-btn"><i class="fas fa-gamepad"></i> Join Now</button>
+                        <button class="view-more-btn" data-game="BGMI" data-type="Squad"><i class="fas fa-eye"></i> View More</button>
                     </div>
                 </div>
             </div>
@@ -780,7 +896,7 @@
                     <div class="tournament-details">
                         <h3><i class="fas fa-user"></i> Solo Match</h3>
                         <p><i class="fas fa-rupee-sign"></i> Entry: ₹50 | <i class="fas fa-trophy"></i> Prize: ₹500 | <i class="fas fa-clock"></i> Starts in 2h 30m</p>
-                        <button class="join-btn"><i class="fas fa-gamepad"></i> Join Now</button>
+                        <button class="view-more-btn" data-game="Free Fire" data-type="Solo"><i class="fas fa-eye"></i> View More</button>
                     </div>
                 </div>
                 <div class="tournament-card glass-effect">
@@ -788,7 +904,7 @@
                     <div class="tournament-details">
                         <h3><i class="fas fa-users"></i> Squad Match</h3>
                         <p><i class="fas fa-rupee-sign"></i> Entry: ₹200 | <i class="fas fa-trophy"></i> Prize: ₹2000 | <i class="fas fa-clock"></i> Starts in 3h 15m</p>
-                        <button class="join-btn"><i class="fas fa-gamepad"></i> Join Now</button>
+                        <button class="view-more-btn" data-game="BGMI" data-type="Squad"><i class="fas fa-eye"></i> View More</button>
                     </div>
                 </div>
                 <div class="tournament-card glass-effect">
@@ -796,7 +912,69 @@
                     <div class="tournament-details">
                         <h3><i class="fas fa-user-friends"></i> Duo Match</h3>
                         <p><i class="fas fa-rupee-sign"></i> Entry: ₹100 | <i class="fas fa-trophy"></i> Prize: ₹1000 | <i class="fas fa-clock"></i> Starts in 5h</p>
-                        <button class="join-btn"><i class="fas fa-gamepad"></i> Join Now</button>
+                        <button class="view-more-btn" data-game="Free Fire" data-type="Duo"><i class="fas fa-eye"></i> View More</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Tournament Detail Page -->
+        <div id="tournament-detail-page" class="page">
+            <button class="back-btn" id="back-to-tournaments"><i class="fas fa-arrow-left"></i> Back</button>
+            <div class="tournament-detail-header glass-effect">
+                <i class="fas fa-trophy"></i>
+                <h2 id="detail-game-name">Free Fire Max</h2>
+                <p id="detail-tournament-type">Solo Match</p>
+            </div>
+            
+            <div class="tournament-detail-page">
+                <div class="match-type glass-effect">
+                    <h3><i class="fas fa-user"></i> Solo Matches</h3>
+                    <div class="tournament-grid">
+                        <div class="tournament-card glass-effect">
+                            <div class="tournament-banner"><i class="fas fa-gamepad"></i> Solo Banner</div>
+                            <div class="tournament-details">
+                                <h3><i class="fas fa-user"></i> Solo Match</h3>
+                                <p><i class="fas fa-rupee-sign"></i> Entry: ₹50 | <i class="fas fa-trophy"></i> Prize: ₹500 | <i class="fas fa-clock"></i> Starts in 2h 30m</p>
+                                <button class="join-btn"><i class="fas fa-gamepad"></i> Join Now</button>
+                            </div>
+                        </div>
+                        <div class="tournament-card glass-effect">
+                            <div class="tournament-banner"><i class="fas fa-gamepad"></i> Solo Banner</div>
+                            <div class="tournament-details">
+                                <h3><i class="fas fa-user"></i> Solo Match</h3>
+                                <p><i class="fas fa-rupee-sign"></i> Entry: ₹75 | <i class="fas fa-trophy"></i> Prize: ₹750 | <i class="fas fa-clock"></i> Starts in 4h</p>
+                                <button class="join-btn"><i class="fas fa-gamepad"></i> Join Now</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="match-type glass-effect">
+                    <h3><i class="fas fa-user-friends"></i> Duo Matches</h3>
+                    <div class="tournament-grid">
+                        <div class="tournament-card glass-effect">
+                            <div class="tournament-banner"><i class="fas fa-gamepad"></i> Duo Banner</div>
+                            <div class="tournament-details">
+                                <h3><i class="fas fa-user-friends"></i> Duo Match</h3>
+                                <p><i class="fas fa-rupee-sign"></i> Entry: ₹100 | <i class="fas fa-trophy"></i> Prize: ₹1000 | <i class="fas fa-clock"></i> Starts in 5h</p>
+                                <button class="join-btn"><i class="fas fa-gamepad"></i> Join Now</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="match-type glass-effect">
+                    <h3><i class="fas fa-users"></i> Squad Matches</h3>
+                    <div class="tournament-grid">
+                        <div class="tournament-card glass-effect">
+                            <div class="tournament-banner"><i class="fas fa-gamepad"></i> Squad Banner</div>
+                            <div class="tournament-details">
+                                <h3><i class="fas fa-users"></i> Squad Match</h3>
+                                <p><i class="fas fa-rupee-sign"></i> Entry: ₹200 | <i class="fas fa-trophy"></i> Prize: ₹2000 | <i class="fas fa-clock"></i> Starts in 6h</p>
+                                <button class="join-btn"><i class="fas fa-gamepad"></i> Join Now</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -808,10 +986,14 @@
                 <span><i class="fas fa-video"></i> Live Matches</span>
             </div>
             <div class="live-stream glass-effect">
-                <i class="fas fa-video"></i> Live Stream Coming Soon
+                <i class="fas fa-video"></i>
+                <h3>Live Stream Coming Soon</h3>
+                <p>Watch live matches and tournaments here</p>
             </div>
             <div class="live-stream glass-effect">
-                <i class="fas fa-calendar-alt"></i> Upcoming Live Events
+                <i class="fas fa-calendar-alt"></i>
+                <h3>Upcoming Live Events</h3>
+                <p>Check back soon for scheduled live events</p>
             </div>
         </div>
         
@@ -830,7 +1012,7 @@
             <div class="history-item glass-effect">
                 <div>
                     <h3><i class="fas fa-users"></i> BGMI Squad</h3>
-                    <p><i class="fas fa-times-circle"></i> Failed Entry | <i class="fas fa-rupee-sign"></i> Fee: ₹200</p>
+                    <p><i class="fas fa-check-circle"></i> Completed | <i class="fas fa-trophy"></i> Prize: ₹0</p>
                 </div>
                 <div class="transaction-amount negative">-₹200</div>
             </div>
@@ -851,15 +1033,19 @@
             <div class="help-section">
                 <div class="help-item glass-effect">
                     <h3><i class="fas fa-question"></i> How to join tournaments?</h3>
-                    <p>Select any tournament from the home page or tournament page and click on Join Now button.</p>
+                    <p>Select any tournament from the home page or tournament page and click on Join Now button. Make sure you have sufficient balance in your wallet.</p>
                 </div>
                 <div class="help-item glass-effect">
                     <h3><i class="fas fa-question"></i> How to withdraw money?</h3>
-                    <p>Go to your wallet and click on withdraw button. Minimum withdrawal amount is ₹200.</p>
+                    <p>Go to your wallet and click on withdraw button. Minimum withdrawal amount is ₹200. Withdrawals are processed within 24 hours.</p>
+                </div>
+                <div class="help-item glass-effect">
+                    <h3><i class="fas fa-question"></i> How to add money to wallet?</h3>
+                    <p>Go to your wallet and click on Add Money button. You can add money using UPI, credit/debit cards, or net banking.</p>
                 </div>
                 <div class="help-item glass-effect">
                     <h3><i class="fas fa-phone-alt"></i> Contact Support</h3>
-                    <p><i class="fas fa-envelope"></i> Email: support@prowar.com<br><i class="fas fa-phone"></i> Phone: +91 9876543210</p>
+                    <p><i class="fas fa-envelope"></i> Email: support@prowar.com<br><i class="fas fa-phone"></i> Phone: +91 9876543210<br><i class="fas fa-clock"></i> Support Hours: 10AM - 8PM</p>
                 </div>
             </div>
         </div>
@@ -872,7 +1058,7 @@
             <div class="wallet-balance glass-effect">
                 <p><i class="fas fa-money-bill-wave"></i> Available Balance</p>
                 <div class="wallet-amount">₹1,250</div>
-                <p><i class="fas fa-chart-line"></i> <span class="positive">+₹500</span> today</p>
+                <p><i class="fas fa-chart-line"></i> +₹500 today</p>
             </div>
             <div class="wallet-actions">
                 <div class="wallet-action glass-effect" id="add-money">
@@ -924,24 +1110,46 @@
             </div>
             <div class="profile-details">
                 <div class="detail-item glass-effect">
-                    <span><i class="fas fa-user"></i></span>
-                    <span>Username: proplayer123</span>
+                    <div class="detail-label">
+                        <i class="fas fa-user"></i>
+                        <span>Username</span>
+                    </div>
+                    <div class="detail-value">proplayer123</div>
                 </div>
                 <div class="detail-item glass-effect">
-                    <span><i class="fas fa-envelope"></i></span>
-                    <span>Email: player@example.com</span>
+                    <div class="detail-label">
+                        <i class="fas fa-envelope"></i>
+                        <span>Email</span>
+                    </div>
+                    <div class="detail-value">player@example.com</div>
                 </div>
                 <div class="detail-item glass-effect">
-                    <span><i class="fas fa-phone"></i></span>
-                    <span>Phone: +91 9876543210</span>
+                    <div class="detail-label">
+                        <i class="fas fa-phone"></i>
+                        <span>Phone</span>
+                    </div>
+                    <div class="detail-value">+91 9876543210</div>
                 </div>
                 <div class="detail-item glass-effect">
-                    <span><i class="fas fa-trophy"></i></span>
-                    <span>Total Wins: 42</span>
+                    <div class="detail-label">
+                        <i class="fas fa-trophy"></i>
+                        <span>Total Wins</span>
+                    </div>
+                    <div class="detail-value">42</div>
                 </div>
                 <div class="detail-item glass-effect">
-                    <span><i class="fas fa-rupee-sign"></i></span>
-                    <span>Total Earnings: <span class="positive">₹12,500</span></span>
+                    <div class="detail-label">
+                        <i class="fas fa-rupee-sign"></i>
+                        <span>Total Earnings</span>
+                    </div>
+                    <div class="detail-value">₹12,500</div>
+                </div>
+                <div class="detail-item glass-effect">
+                    <div class="detail-label">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>Member Since</span>
+                    </div>
+                    <div class="detail-value">15 Jan 2023</div>
                 </div>
             </div>
         </div>
@@ -979,6 +1187,18 @@
                     <input type="checkbox" checked>
                     <span class="slider round"></span>
                 </label>
+            </div>
+            <div class="settings-option glass-effect">
+                <span><i class="fas fa-shield-alt"></i> Privacy Policy</span>
+                <i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="settings-option glass-effect">
+                <span><i class="fas fa-file-alt"></i> Terms & Conditions</span>
+                <i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="settings-option glass-effect">
+                <span><i class="fas fa-info-circle"></i> About App</span>
+                <i class="fas fa-chevron-right"></i>
             </div>
         </div>
         
@@ -1025,76 +1245,224 @@
             <i class="fas fa-cog"></i>
             <span>Settings</span>
         </div>
+        <div class="menu-item" id="logout-menu">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>Logout</span>
+        </div>
     </div>
     
     <!-- Overlay for Side Menu -->
     <div class="overlay" id="overlay"></div>
     
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-        // Splash Screen Timer
-        setTimeout(function() {
-            document.getElementById('splash-screen').style.display = 'none';
-            document.getElementById('auth-screen').style.display = 'flex';
-        }, 3000);
+        // Supabase configuration
+        const supabaseUrl = 'https://udzedfjohdvdbuqszpsb.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVkemVkZmpvaGR2ZGJ1cXN6cHNiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE1MTk4OTYsImV4cCI6MjA2NzA5NTg5Nn0.XXqF4YUS_56lxv7CesmlnfdXeEUZp1bp1y1EKpQY7q8';
+        const supabase = supabase.createClient(supabaseUrl, supabaseKey);
         
+        // Show/hide processing overlay
+        function showProcessing(show) {
+            document.getElementById('processing-overlay').style.display = show ? 'flex' : 'none';
+        }
+        
+        // Show/hide button loading state
+        function setButtonLoading(button, isLoading) {
+            if (isLoading) {
+                button.classList.add('loading');
+                button.disabled = true;
+            } else {
+                button.classList.remove('loading');
+                button.disabled = false;
+            }
+        }
+
+        // Check user role on page load
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Splash screen timer
+            setTimeout(async function() {
+                document.getElementById('splash-screen').style.display = 'none';
+                
+                const { data: { user } } = await supabase.auth.getUser();
+                
+                if (!user) {
+                    document.getElementById('auth-screen').style.display = 'flex';
+                    return;
+                }
+
+                // Show processing
+                showProcessing(true);
+                
+                // Check if user is owner or admin
+                const { data: profile } = await supabase
+                    .from('profiles')
+                    .select('is_admin, is_owner')
+                    .eq('id', user.id)
+                    .single();
+
+                if (profile?.is_owner) {
+                    window.location.href = "owner.html";
+                    return;
+                }
+
+                if (profile?.is_admin) {
+                    window.location.href = "admin.html";
+                    return;
+                }
+
+                // Regular user - show app
+                document.getElementById('auth-screen').style.display = 'none';
+                document.getElementById('app-container').style.display = 'block';
+                await loadUserData(user.id);
+                
+                // Hide processing
+                showProcessing(false);
+            }, 3000);
+        });
+
         // Toggle between Login and Signup
         const toggleAuth = document.getElementById('toggle-auth');
         const authTitle = document.getElementById('auth-title');
         const authBtn = document.getElementById('auth-btn');
-        const usernameInput = document.getElementById('username');
-        const passwordInput = document.getElementById('password');
         
         toggleAuth.addEventListener('click', function() {
             if (authTitle.textContent.includes('LOGIN')) {
                 authTitle.innerHTML = '<i class="fas fa-user-plus"></i> SIGN UP';
-                authBtn.innerHTML = '<i class="fas fa-rocket"></i> Sign Up';
+                authBtn.querySelector('.btn-text').innerHTML = '<i class="fas fa-rocket"></i> Sign Up';
                 toggleAuth.innerHTML = '<i class="fas fa-key"></i> Login';
-                usernameInput.value = ''; // Clear fields on toggle
-                passwordInput.value = '';
             } else {
                 authTitle.innerHTML = '<i class="fas fa-key"></i> LOGIN';
-                authBtn.innerHTML = '<i class="fas fa-rocket"></i> Login';
+                authBtn.querySelector('.btn-text').innerHTML = '<i class="fas fa-rocket"></i> Login';
                 toggleAuth.innerHTML = '<i class="fas fa-user-plus"></i> Sign Up';
-                usernameInput.value = ''; // Clear fields on toggle
-                passwordInput.value = '';
             }
         });
         
-        // Simple authentication (just for demo)
-        authBtn.addEventListener('click', function() {
-            const username = usernameInput.value;
-            const password = passwordInput.value;
-
-            // Basic validation
-            if (!username || !password) {
-                alert('Please enter both username and password.');
+        // Authentication handler
+        authBtn.addEventListener('click', async function() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            if (!email || !password) {
+                alert('Please enter both email and password');
                 return;
             }
             
-            // Replace with actual authentication logic
-            // For demo, let's assume any non-empty input logs in
-            document.getElementById('auth-screen').style.display = 'none';
-            document.getElementById('app-container').style.display = 'block';
-            
-            // Start banner slider
-            let currentBanner = 0;
-            const banners = document.getElementById('banner-slider');
-            const totalBanners = 3; // Assuming 3 banners
-            
-            setInterval(function() {
-                currentBanner = (currentBanner + 1) % totalBanners;
-                banners.style.transform = `translateX(-${currentBanner * 100}%)`;
-            }, 3000);
+            // Show button loading
+            setButtonLoading(authBtn, true);
+            showProcessing(true);
+
+            try {
+                // Try to sign in
+                const { data, error } = await supabase.auth.signInWithPassword({
+                    email: email,
+                    password: password
+                });
+
+                if (error) {
+                    // If sign in fails, try to sign up if in sign up mode
+                    if (authTitle.textContent.includes('SIGN UP')) {
+                        const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+                            email: email,
+                            password: password,
+                            options: {
+                                data: {
+                                    username: email.split('@')[0]
+                                }
+                            }
+                        });
+
+                        if (signUpError) throw signUpError;
+                        
+                        alert('Sign up successful! Please check your email for verification.');
+                        setButtonLoading(authBtn, false);
+                        showProcessing(false);
+                        return;
+                    }
+                    throw error;
+                }
+
+                // Check user role after login
+                const { data: profile } = await supabase
+                    .from('profiles')
+                    .select('is_admin, is_owner')
+                    .eq('id', data.user.id)
+                    .single();
+
+                if (profile?.is_owner) {
+                    window.location.href = "owner.html";
+                    return;
+                }
+
+                if (profile?.is_admin) {
+                    window.location.href = "admin.html";
+                    return;
+                }
+
+                document.getElementById('auth-screen').style.display = 'none';
+                document.getElementById('app-container').style.display = 'block';
+                await loadUserData(data.user.id);
+            } catch (error) {
+                alert('Authentication error: ' + error.message);
+            } finally {
+                setButtonLoading(authBtn, false);
+                showProcessing(false);
+            }
         });
+
+        async function loadUserData(userId) {
+            showProcessing(true);
+            try {
+                // Load user data from Supabase
+                const { data: userData } = await supabase
+                    .from('profiles')
+                    .select('username, wallet_balance')
+                    .eq('id', userId)
+                    .single();
+
+                if (userData) {
+                    // Update UI with user data
+                    document.querySelector('.profile-avatar').textContent = userData.username.charAt(0);
+                    document.querySelector('.profile-header h2').textContent = userData.username;
+                    document.querySelector('.wallet-amount').textContent = `₹${userData.wallet_balance}`;
+                }
+
+                // Load tournaments
+                await loadTournaments();
+            } catch (error) {
+                console.error('Error loading user data:', error);
+                alert('Error loading data. Please try again.');
+            } finally {
+                showProcessing(false);
+            }
+        }
+
+        async function loadTournaments() {
+            showProcessing(true);
+            try {
+                const { data: tournaments } = await supabase
+                    .from('tournaments')
+                    .select('*')
+                    .order('start_time', { ascending: true });
+
+                // Render tournaments in UI
+                // This is a simplified version - you'll need to implement the actual rendering
+                console.log('Loaded tournaments:', tournaments);
+            } catch (error) {
+                console.error('Error loading tournaments:', error);
+                alert('Error loading tournaments. Please try again.');
+            } finally {
+                showProcessing(false);
+            }
+        }
         
         // Theme Toggle
         const themeToggle = document.getElementById('theme-toggle');
         themeToggle.addEventListener('click', function() {
-            document.body.classList.toggle('light-mode'); // Toggle light-mode class
+            document.body.classList.toggle('light-mode');
             if (document.body.classList.contains('light-mode')) {
-                themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
-            } else {
                 themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+            } else {
+                themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
             }
         });
         
@@ -1149,10 +1517,7 @@
         });
         
         // View All Tournaments
-        document.getElementById('view-all-ff').addEventListener('click', navigateToTournaments);
-        document.getElementById('view-all-bgmi').addEventListener('click', navigateToTournaments);
-        
-        function navigateToTournaments() {
+        document.getElementById('view-all-ff').addEventListener('click', function() {
             // Hide all pages
             pages.forEach(page => {
                 page.classList.remove('active');
@@ -1166,40 +1531,181 @@
                 icon.classList.remove('active');
             });
             document.querySelector('.footer-icon[data-page="tournament-page"]').classList.add('active');
-        }
+        });
         
-        // Menu Item Navigation
-        document.getElementById('wallet-menu').addEventListener('click', navigateToPage.bind(null, 'wallet-page', 'wallet-btn'));
-        document.getElementById('profile-menu').addEventListener('click', navigateToPage.bind(null, 'profile-page', 'profile-btn'));
-        document.getElementById('settings-menu').addEventListener('click', navigateToPage.bind(null, 'settings-page', 'settings-btn'));
-        
-        // Header Button Navigation
-        document.getElementById('wallet-btn').addEventListener('click', navigateToPage.bind(null, 'wallet-page', 'wallet-btn'));
-        document.getElementById('profile-btn').addEventListener('click', navigateToPage.bind(null, 'profile-page', 'profile-btn'));
-        
-        function navigateToPage(pageId, footerIconSelector) {
+        document.getElementById('view-all-bgmi').addEventListener('click', function() {
             // Hide all pages
             pages.forEach(page => {
                 page.classList.remove('active');
             });
             
-            // Show selected page
-            document.getElementById(pageId).classList.add('active');
+            // Show tournament page
+            document.getElementById('tournament-page').classList.add('active');
             
             // Update active icon
             footerIcons.forEach(icon => {
                 icon.classList.remove('active');
             });
-            document.querySelector(`.footer-icon[data-page="${pageId}"]`).classList.add('active');
+            document.querySelector('.footer-icon[data-page="tournament-page"]').classList.add('active');
+        });
+        
+        // View More Button for Tournament Details
+        const viewMoreButtons = document.querySelectorAll('.view-more-btn');
+        viewMoreButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const game = this.getAttribute('data-game');
+                const type = this.getAttribute('data-type');
+                
+                document.getElementById('detail-game-name').textContent = game;
+                document.getElementById('detail-tournament-type').textContent = type + " Matches";
+                
+                // Hide all pages
+                pages.forEach(page => {
+                    page.classList.remove('active');
+                });
+                
+                // Show tournament detail page
+                document.getElementById('tournament-detail-page').classList.add('active');
+                
+                // Hide footer for detail page
+                document.querySelector('.app-footer').style.display = 'none';
+            });
+        });
+        
+        // Back button from tournament detail
+        document.getElementById('back-to-tournaments').addEventListener('click', function() {
+            // Hide all pages
+            pages.forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // Show tournament page
+            document.getElementById('tournament-page').classList.add('active');
+            
+            // Show footer again
+            document.querySelector('.app-footer').style.display = 'flex';
+            
+            // Update active icon
+            footerIcons.forEach(icon => {
+                icon.classList.remove('active');
+            });
+            document.querySelector('.footer-icon[data-page="tournament-page"]').classList.add('active');
+        });
+        
+        // Menu Item Navigation
+        document.getElementById('wallet-menu').addEventListener('click', function() {
+            // Hide all pages
+            pages.forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // Show wallet page
+            document.getElementById('wallet-page').classList.add('active');
+            
+            // Update active icon
+            footerIcons.forEach(icon => {
+                icon.classList.remove('active');
+            });
             
             // Close menu
             sideMenu.style.left = '-300px';
             overlay.style.display = 'none';
-        }
+        });
+        
+        document.getElementById('profile-menu').addEventListener('click', function() {
+            // Hide all pages
+            pages.forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // Show profile page
+            document.getElementById('profile-page').classList.add('active');
+            
+            // Update active icon
+            footerIcons.forEach(icon => {
+                icon.classList.remove('active');
+            });
+            
+            // Close menu
+            sideMenu.style.left = '-300px';
+            overlay.style.display = 'none';
+        });
+        
+        document.getElementById('settings-menu').addEventListener('click', function() {
+            // Hide all pages
+            pages.forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // Show settings page
+            document.getElementById('settings-page').classList.add('active');
+            
+            // Update active icon
+            footerIcons.forEach(icon => {
+                icon.classList.remove('active');
+            });
+            
+            // Close menu
+            sideMenu.style.left = '-300px';
+            overlay.style.display = 'none';
+        });
+        
+        document.getElementById('logout-menu').addEventListener('click', async function() {
+            if(confirm('Are you sure you want to logout?')) {
+                await supabase.auth.signOut();
+                window.location.href = "index.html";
+            }
+        });
+        
+        // Header Button Navigation
+        document.getElementById('wallet-btn').addEventListener('click', function() {
+            // Hide all pages
+            pages.forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // Show wallet page
+            document.getElementById('wallet-page').classList.add('active');
+            
+            // Update active icon
+            footerIcons.forEach(icon => {
+                icon.classList.remove('active');
+            });
+        });
+        
+        document.getElementById('profile-btn').addEventListener('click', function() {
+            // Hide all pages
+            pages.forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // Show profile page
+            document.getElementById('profile-page').classList.add('active');
+            
+            // Update active icon
+            footerIcons.forEach(icon => {
+                icon.classList.remove('active');
+            });
+        });
         
         // Language Selection
         document.getElementById('language-select').addEventListener('change', function() {
-            alert('Language changed to: ' + this.options[this.selectedIndex].text + '. (Full translation not implemented)');
+            const lang = this.value;
+            const langText = this.options[this.selectedIndex].text;
+            
+            // In a real app, you would load translations here
+            alert('Language changed to: ' + langText);
+            
+            // Example of how you might implement translations
+            if (lang === 'hi') {
+                document.querySelector('.app-title').textContent = 'प्रो वॉर';
+                document.querySelector('[data-page="home-page"] span').textContent = 'होम';
+                // ... and so on for all text elements
+            } else {
+                document.querySelector('.app-title').textContent = 'PRO WAR';
+                document.querySelector('[data-page="home-page"] span').textContent = 'Home';
+                // Reset to English
+            }
         });
         
         // Wallet Actions

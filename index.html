@@ -39,14 +39,14 @@
             border: 1px solid var(--glass-border);
         }
 
-        /* Splash Screen - UPDATED WITH NEON and LOADER */
+        /* Splash Screen - NEW DESIGN */
         #splash-screen {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+            background: #1a1a1a;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -54,46 +54,54 @@
             z-index: 9999;
             animation: fadeOutSplashScreen 0.5s ease-in-out 2.5s forwards;
         }
-        
+
         @keyframes fadeOutSplashScreen {
             to { opacity: 0; visibility: hidden; }
         }
 
-        .logo {
-            font-size: 3.5rem;
+        .splash-logo-container {
+            display: flex;
             font-weight: bold;
-            background: linear-gradient(to right, var(--gold), var(--dark-gold));
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            animation: neon-glow 2s ease-in-out infinite alternate;
+            font-size: 5rem;
+            color: var(--gold);
         }
 
-        @keyframes neon-glow {
-            from {
-                text-shadow: 0 0 5px #fff, 0 0 10px var(--gold), 0 0 15px var(--gold), 0 0 20px var(--gold);
-            }
-            to {
-                text-shadow: 0 0 10px #fff, 0 0 20px var(--dark-gold), 0 0 30px var(--dark-gold), 0 0 40px var(--dark-gold);
-            }
+        .splash-logo-char {
+            opacity: 0;
+            transform: translateY(-50px);
+            text-shadow: 0 0 5px var(--gold), 0 0 15px rgba(255, 215, 0, 0.5);
+        }
+
+        .splash-logo-char:nth-child(1) {
+            animation: drop-in 0.8s ease-out 0.2s forwards;
         }
         
-        .loader {
-            width: 50px;
-            height: 50px;
-            border: 5px solid rgba(255, 215, 0, 0.2);
-            border-top-color: var(--gold);
-            border-radius: 50%;
-            margin-top: 2rem;
-            animation: spin 1s linear infinite;
+        .splash-logo-char:nth-child(2) {
+            animation: drop-in 0.8s ease-out 0.4s forwards;
         }
-        
-        @keyframes spin {
+
+        @keyframes drop-in {
             to {
-                transform: rotate(360deg);
+                transform: translateY(0);
+                opacity: 1;
             }
         }
 
+        .splash-title {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #eee;
+            margin-top: 1rem;
+            letter-spacing: 2px;
+            opacity: 0;
+            animation: fade-in-title 1s ease-in-out 1.2s forwards;
+        }
+
+        @keyframes fade-in-title {
+            to {
+                opacity: 1;
+            }
+        }
 
         /* Auth Screens */
         .auth-container {
@@ -151,9 +159,25 @@
             margin-top: 1rem;
         }
 
+        /* FORGOT PASSWORD LINK FIX */
+        #forgot-password-link {
+            display: block;
+            text-align: right;
+            margin-top: 0.75rem;
+            margin-bottom: -0.5rem; /* pull the next element up slightly */
+        }
+        #forgot-password-link a {
+            color: #aaa;
+            font-size: 0.9rem;
+            text-decoration: none;
+        }
+        #forgot-password-link a:hover {
+            color: var(--gold);
+        }
+
         .auth-toggle {
             text-align: center;
-            margin-top: 1rem;
+            margin-top: 1.5rem;
             color: #aaa;
         }
 
@@ -567,8 +591,11 @@
                 grid-template-columns: 1fr;
             }
             
-            .logo {
-                font-size: 2.5rem;
+            .splash-logo-container {
+                font-size: 4rem;
+            }
+            .splash-title {
+                font-size: 1.5rem;
             }
         }
     </style>
@@ -576,8 +603,11 @@
 <body>
     <!-- Splash Screen -->
     <div id="splash-screen">
-        <div class="logo">PRO WAR</div>
-        <div class="loader"></div>
+        <div class="splash-logo-container">
+            <span class="splash-logo-char">P</span>
+            <span class="splash-logo-char">W</span>
+        </div>
+        <div class="splash-title">PRO WAR</div>
     </div>
 
     <!-- Auth Screens -->
@@ -590,8 +620,8 @@
                 <input type="password" id="login-password" placeholder="Password" required>
                 <button type="submit" class="auth-btn">Login</button>
             </form>
-            <div id="forgot-password" style="text-align: right; margin-top: -0.5rem;">
-                <a href="#" id="forgot-link" style="color: #aaa; font-size: 0.9rem;">Forgot Password?</a>
+            <div id="forgot-password-link">
+                <a href="#" id="forgot-link">Forgot Password?</a>
             </div>
             <div class="auth-toggle">
                 Don't have an account? <span id="show-signup">Sign Up</span>
@@ -768,7 +798,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script>
-        // Initialize Supabase -- USING YOUR ORIGINAL CREDENTIALS
+        // Initialize Supabase
         const supabaseUrl = 'https://udzedfjohdvdbuqszpsb.supabase.co';
         const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVkemVkZmpvaGR2ZGJ1cXN6cHNiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE1MTk4OTYsImV4cCI6MjA2NzA5NTg5Nn0.XXqF4YUS_56lxv7CesmlnfdXeEUZp1bp1y1EKpQY7q8';
         const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
@@ -824,7 +854,6 @@
         // State
         let currentUser = null;
         let selectedAmount = 0;
-        let loginAttempts = 0;
 
         // Initialize Swiper
         const swiper = new Swiper('.swiper', {
@@ -882,10 +911,6 @@
             });
 
             if (error) {
-                loginAttempts++;
-                if (loginAttempts >= 3) {
-                    forgotLink.style.display = 'block';
-                }
                 loginError.textContent = error.message;
                 return;
             }
@@ -917,7 +942,7 @@
             const { error: insertError } = await supabase.from("profiles").insert({
                 id: user.id,
                 username: username,
-                email: email, // Storing email in profile as well
+                email: email, 
                 is_admin: false,
                 is_owner: false,
                 wallet_balance: 0
@@ -925,9 +950,7 @@
 
             if (insertError) {
                 signupError.style.color = '#ff6b6b'; // Red for error
-                signupError.textContent = insertError.message;
-                // Important: If profile creation fails, we should handle this, maybe delete the auth user.
-                // For now, we just show the error.
+                signupError.textContent = `Profile creation failed: ${insertError.message}`;
                 return;
             }
 
@@ -954,7 +977,7 @@
             const email = document.getElementById('forgot-email').value;
             
             const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
-                redirectTo: 'https://udzedfjohdvdbuqszpsb.supabase.co/auth/reset-password'
+                redirectTo: window.location.origin // Redirect to the same site
             });
 
             if (error) {
@@ -962,14 +985,9 @@
                 return;
             }
 
-            forgotError.textContent = '';
             forgotError.style.color = '#4CAF50';
             forgotError.textContent = 'Password reset link sent to your email!';
             
-            // Clear form
-            document.getElementById('forgot-email').value = '';
-            
-            // Show login after 3 seconds
             setTimeout(() => {
                 forgotContainer.style.display = 'none';
                 loginContainer.style.display = 'flex';
@@ -1052,9 +1070,8 @@
                 currency: 'INR',
                 name: 'Pro War',
                 description: 'Add Money to Wallet',
-                image: 'https://via.placeholder.com/150?text=Pro+War',
+                image: 'https://via.placeholder.com/150?text=PW',
                 handler: async function(response) {
-                    // Payment successful - update wallet balance
                     const { data: userData, error: userError } = await supabase
                         .from('profiles')
                         .select('wallet_balance')
@@ -1078,7 +1095,6 @@
                         return;
                     }
 
-                    // Record transaction
                     const { error: transactionError } = await supabase
                         .from('transactions')
                         .insert([
@@ -1095,7 +1111,6 @@
                         console.error('Error recording transaction:', transactionError);
                     }
 
-                    // Update UI
                     walletAmount.textContent = `₹${newBalance}`;
                     modalWalletAmount.textContent = `₹${newBalance}`;
                     paymentModal.style.display = 'none';
@@ -1134,7 +1149,6 @@
                 return;
             }
 
-            // Check if user has sufficient balance
             const { data: userData, error: userError } = await supabase
                 .from('profiles')
                 .select('wallet_balance')
@@ -1163,7 +1177,6 @@
                 return;
             }
 
-            // Record transaction
             const { error: transactionError } = await supabase
                 .from('transactions')
                 .insert([
@@ -1180,7 +1193,6 @@
                 console.error('Error recording transaction:', transactionError);
             }
 
-            // Update UI
             walletAmount.textContent = `₹${newBalance}`;
             modalWalletAmount.textContent = `₹${newBalance}`;
             withdrawModal.style.display = 'none';
@@ -1197,12 +1209,20 @@
 
         // Functions
         async function checkAuth() {
-            const { data: { user }, error } = await supabase.auth.getUser();
+            // supabase.auth.getSession() is the recommended way
+            const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+
+            if (sessionError) {
+                console.error("Error getting session:", sessionError);
+                showAuthScreen();
+                return;
+            }
             
-            if (user) {
-                currentUser = user;
+            if (session && session.user) {
+                currentUser = session.user;
                 await fetchUserProfile();
             } else {
+                // No session, show login
                 showAuthScreen();
             }
         }
@@ -1210,6 +1230,7 @@
         function showAuthScreen() {
             splashScreen.style.display = 'none';
             loginContainer.style.display = 'flex';
+            appContainer.style.display = 'none';
         }
 
         async function fetchUserProfile() {
@@ -1219,25 +1240,21 @@
                 .eq('id', currentUser.id)
                 .single();
 
-            // IMPROVED ERROR HANDLING
+            // UPDATED ERROR HANDLING AS REQUESTED
             if (error) {
                 console.error('Error fetching profile:', error.message);
-                alert("Could not fetch your profile. You may be logged out. Please try logging in again.");
+                alert("Could not fetch your profile. Please try logging in again.");
                 await supabase.auth.signOut();
                 showAuthScreen();
                 return;
             }
 
-            // Update wallet display
             walletAmount.textContent = `₹${data.wallet_balance}`;
             modalWalletAmount.textContent = `₹${data.wallet_balance}`;
 
-            // Update profile initial
             const profileBtn = document.getElementById('profile-btn');
             profileBtn.textContent = data.username.charAt(0).toUpperCase();
 
-            // Show appropriate screen based on role
-            splashScreen.style.display = 'none';
             loginContainer.style.display = 'none';
             signupContainer.style.display = 'none';
             forgotContainer.style.display = 'none';
@@ -1279,10 +1296,8 @@
                 tournamentsContainer.appendChild(card);
             });
 
-            // Add event listeners to join buttons
             document.querySelectorAll('.join-btn').forEach(button => {
                 button.addEventListener('click', async (e) => {
-                    const tournamentId = e.target.dataset.id;
                     const entryFee = parseInt(e.target.dataset.fee);
                     
                     const { data: userData, error: userError } = await supabase
@@ -1304,17 +1319,12 @@
 
                     const newBalance = userData.wallet_balance - entryFee;
 
-                    const { error: updateError } = await supabase
+                    await supabase
                         .from('profiles')
                         .update({ wallet_balance: newBalance })
                         .eq('id', currentUser.id);
-
-                    if (updateError) {
-                        console.error('Error updating wallet balance:', updateError);
-                        return;
-                    }
-
-                    const { error: transactionError } = await supabase
+                    
+                    await supabase
                         .from('transactions')
                         .insert([
                             { 
@@ -1326,16 +1336,11 @@
                             }
                         ]);
 
-                    if (transactionError) {
-                        console.error('Error recording transaction:', transactionError);
-                    }
-
-                    // Update UI
                     walletAmount.textContent = `₹${newBalance}`;
                     modalWalletAmount.textContent = `₹${newBalance}`;
                     fetchTransactions();
 
-                    alert(`You have successfully joined the tournament! Entry fee of ₹${entryFee} has been deducted from your wallet.`);
+                    alert(`You have successfully joined the tournament!`);
                 });
             });
         }

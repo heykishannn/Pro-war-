@@ -4,1178 +4,1360 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pro War - Real Money Gaming</title>
-    <meta name="description" content="Pro War - The ultimate real money gaming platform with tournaments, mini-games, and instant payouts. Join the battle and win big!">
-    <meta property="og:title" content="Pro War - Real Money Gaming">
-    <meta property="og:description" content="The ultimate real money gaming platform with tournaments, mini-games, and instant payouts.">
-    <meta property="og:type" content="website">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&family=Orbitron:wght@400;500;700&display=swap" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         :root {
-            --golden: #FFD700;
-            --golden-dark: #FFA500;
-            --coral: #FF6B35;
-            --glass-light: rgba(255, 255, 255, 0.1);
-            --glass-dark: rgba(0, 0, 0, 0.3);
+            --gold: #FFD700;
+            --dark-gold: #C5A30B;
+            --glass-bg: rgba(255, 215, 0, 0.15);
+            --glass-border: rgba(255, 215, 0, 0.3);
+            --glass-shadow: 0 8px 32px rgba(255, 215, 0, 0.1);
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
         }
 
         body {
-            font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
             color: white;
             min-height: 100vh;
-            overflow-x: hidden;
         }
 
-        .glass-morphism {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .glass-morphism-dark {
-            background: rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 215, 0, 0.2);
-        }
-
-        .golden-gradient {
-            background: linear-gradient(135deg, #FFD700 0%, #FFA500 50%, #FF6B35 100%);
-        }
-
-        .golden-gradient-radial {
-            background: radial-gradient(circle at center, #FFD700 0%, #FFA500 50%, #FF6B35 100%);
-        }
-
-        .neon-glow {
-            box-shadow: 0 0 10px rgba(255, 215, 0, 0.5), 0 0 20px rgba(255, 215, 0, 0.3), 0 0 30px rgba(255, 215, 0, 0.1);
-        }
-
-        .neon-glow-hover:hover {
-            box-shadow: 0 0 15px rgba(255, 215, 0, 0.7), 0 0 25px rgba(255, 215, 0, 0.5), 0 0 35px rgba(255, 215, 0, 0.3);
-        }
-
-        .tournament-card {
-            background: linear-gradient(135deg, rgba(255, 215, 0, 0.1) 0%, rgba(255, 165, 0, 0.05) 100%);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 215, 0, 0.3);
-            transition: all 0.3s ease;
-        }
-
-        .tournament-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.2);
-            border-color: rgba(255, 215, 0, 0.5);
-        }
-
-        .game-card {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 215, 0, 0.1) 100%);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            transition: all 0.3s ease;
-        }
-
-        .game-card:hover {
-            transform: scale(1.05);
-            box-shadow: 0 15px 40px rgba(255, 215, 0, 0.3);
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
-            color: #000;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 8px;
-            cursor: pointer;
-        }
-
-        .btn-primary:hover {
-            background: linear-gradient(135deg, #FFA500 0%, #FF6B35 100%);
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.4);
-        }
-
-        .btn-secondary {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 215, 0, 0.3);
-            color: #FFD700;
-            transition: all 0.3s ease;
-            padding: 12px 24px;
-            border-radius: 8px;
-            cursor: pointer;
-        }
-
-        .btn-secondary:hover {
-            background: rgba(255, 215, 0, 0.1);
-            border-color: rgba(255, 215, 0, 0.5);
-            transform: translateY(-2px);
-        }
-
-        .input-field {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: #fff;
-            transition: all 0.3s ease;
-            padding: 12px 16px;
-            border-radius: 8px;
-            width: 100%;
-            outline: none;
-        }
-
-        .input-field:focus {
-            background: rgba(255, 255, 255, 0.15);
-            border-color: rgba(255, 215, 0, 0.5);
-            box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.1);
-        }
-
-        .input-field::placeholder {
-            color: rgba(255, 255, 255, 0.6);
-        }
-
-        .loading-spinner {
-            border: 3px solid rgba(255, 215, 0, 0.3);
-            border-top: 3px solid #FFD700;
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .success-message {
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(16, 185, 129, 0.1) 100%);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(16, 185, 129, 0.3);
-            color: #10B981;
-            padding: 12px 16px;
-            border-radius: 8px;
-            margin-bottom: 16px;
-        }
-
-        .error-message {
-            background: linear-gradient(135deg, rgba(239, 68, 68, 0.2) 0%, rgba(239, 68, 68, 0.1) 100%);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(239, 68, 68, 0.3);
-            color: #EF4444;
-            padding: 12px 16px;
-            border-radius: 8px;
-            margin-bottom: 16px;
-        }
-
-        .splash-logo {
-            font-size: 3rem;
-            font-weight: 700;
-            color: #FFD700;
-            text-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
-            animation: glow 2s ease-in-out infinite alternate;
-            font-family: 'Orbitron', monospace;
-        }
-
-        @keyframes glow {
-            0% { text-shadow: 0 0 5px #FFD700, 0 0 10px #FFD700, 0 0 15px #FFD700; }
-            100% { text-shadow: 0 0 10px #FFD700, 0 0 20px #FFD700, 0 0 30px #FFD700; }
-        }
-
-        @keyframes bounce-in {
-            0% { transform: scale(0.3); opacity: 0; }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); opacity: 1; }
-        }
-
-        @keyframes fade-in {
-            0% { opacity: 0; transform: translateY(10px); }
-            100% { opacity: 1; transform: translateY(0); }
-        }
-
-        .animate-bounce-in {
-            animation: bounce-in 0.6s ease-out;
-        }
-
-        .animate-fade-in {
-            animation: fade-in 0.3s ease-out;
-        }
-
-        .hidden {
-            display: none !important;
-        }
-
-        .modal-overlay {
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(5px);
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            z-index: 1000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 1rem;
-        }
-
-        .modal-content {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 215, 0, 0.05) 100%);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+        /* Glassmorphism Effect */
+        .glass-card {
+            background: var(--glass-bg);
             border-radius: 16px;
-            padding: 24px;
-            max-width: 500px;
-            width: 100%;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-
-        .slide-container {
-            overflow: hidden;
-            position: relative;
-            border-radius: 16px;
-        }
-
-        .slide-wrapper {
-            display: flex;
-            transition: transform 0.5s ease;
-        }
-
-        .slide {
-            min-width: 100%;
-            flex-shrink: 0;
-        }
-
-        .banner-slide {
-            background: linear-gradient(135deg, rgba(255, 215, 0, 0.2) 0%, rgba(255, 107, 53, 0.1) 100%);
+            box-shadow: var(--glass-shadow);
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 215, 0, 0.3);
-            padding: 24px;
-            height: 160px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
         }
 
-        .banner-indicator {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.3);
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .banner-indicator.active {
-            background: #FFD700;
-            box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
-        }
-
-        .balance-display {
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(255, 215, 0, 0.1) 100%);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(16, 185, 129, 0.3);
-            color: #10B981;
-            font-weight: 600;
-            font-size: 1.2rem;
-            padding: 8px 16px;
-            border-radius: 24px;
-        }
-
-        .prize-badge {
-            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
-            color: #000;
-            font-weight: 600;
-            font-size: 0.9rem;
-            padding: 4px 8px;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(255, 215, 0, 0.3);
-        }
-
-        .entry-fee {
-            background: rgba(255, 107, 53, 0.2);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 107, 53, 0.3);
-            color: #FF6B35;
-            font-weight: 500;
-            padding: 4px 8px;
-            border-radius: 8px;
-        }
-
-        .game-icon {
-            background: linear-gradient(135deg, rgba(255, 215, 0, 0.2) 0%, rgba(255, 215, 0, 0.1) 100%);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 215, 0, 0.3);
-            color: #FFD700;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            transition: all 0.3s ease;
-        }
-
-        .game-icon:hover {
-            transform: scale(1.1);
-            box-shadow: 0 5px 20px rgba(255, 215, 0, 0.4);
-        }
-
-        .particles-bg {
+        /* Splash Screen */
+        #splash-screen {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            pointer-events: none;
-            z-index: -1;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            animation: fadeOut 2.5s ease-in-out 2s forwards;
         }
 
-        .particle {
-            position: absolute;
-            width: 3px;
-            height: 3px;
-            background: #FFD700;
+        @keyframes fadeOut {
+            to { opacity: 0; visibility: hidden; }
+        }
+
+        .logo {
+            font-size: 3.5rem;
+            font-weight: bold;
+            background: linear-gradient(to right, var(--gold), var(--dark-gold));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+            animation: glow 1.5s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { text-shadow: 0 0 10px rgba(255, 215, 0, 0.5); }
+            to { text-shadow: 0 0 20px rgba(255, 215, 0, 0.8), 0 0 30px rgba(255, 215, 0, 0.6); }
+        }
+
+        /* Auth Screens */
+        .auth-container {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .auth-box {
+            width: 90%;
+            max-width: 400px;
+            padding: 2rem;
+            border-radius: 16px;
+        }
+
+        .auth-title {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: var(--gold);
+            font-size: 1.8rem;
+        }
+
+        .auth-form input {
+            width: 100%;
+            padding: 12px 15px;
+            margin-bottom: 1rem;
+            border: none;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+        }
+
+        .auth-form input:focus {
+            outline: none;
+            border-color: var(--gold);
+        }
+
+        .auth-btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            background: linear-gradient(to right, var(--gold), var(--dark-gold));
+            color: #1a1a1a;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 1rem;
+        }
+
+        .auth-toggle {
+            text-align: center;
+            margin-top: 1rem;
+            color: #aaa;
+        }
+
+        .auth-toggle span {
+            color: var(--gold);
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+        .error-message {
+            color: #ff6b6b;
+            font-size: 0.9rem;
+            margin-top: -0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Main App */
+        #app-container {
+            display: none;
+            padding: 1rem;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .app-logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--gold);
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .wallet-btn {
+            background: rgba(255, 215, 0, 0.2);
+            border: 1px solid var(--glass-border);
+            color: var(--gold);
+            padding: 8px 12px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.9rem;
+        }
+
+        .profile-pic {
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
-            animation: float 6s ease-in-out infinite;
+            background: var(--gold);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #1a1a1a;
+            font-weight: bold;
+            cursor: pointer;
         }
 
-        @keyframes float {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(180deg); }
+        /* Banner */
+        .swiper {
+            width: 100%;
+            height: 180px;
+            margin-bottom: 2rem;
         }
 
-        /* Utility classes */
-        .flex { display: flex; }
-        .flex-col { flex-direction: column; }
-        .items-center { align-items: center; }
-        .justify-center { justify-content: center; }
-        .justify-between { justify-content: space-between; }
-        .space-x-2 > * + * { margin-left: 0.5rem; }
-        .space-x-4 > * + * { margin-left: 1rem; }
-        .space-y-4 > * + * { margin-top: 1rem; }
-        .space-y-6 > * + * { margin-top: 1.5rem; }
-        .p-4 { padding: 1rem; }
-        .p-6 { padding: 1.5rem; }
-        .px-4 { padding-left: 1rem; padding-right: 1rem; }
-        .py-3 { padding-top: 0.75rem; padding-bottom: 0.75rem; }
-        .mb-4 { margin-bottom: 1rem; }
-        .mb-6 { margin-bottom: 1.5rem; }
-        .mt-4 { margin-top: 1rem; }
-        .mt-6 { margin-top: 1.5rem; }
-        .text-center { text-align: center; }
-        .text-sm { font-size: 0.875rem; }
-        .text-lg { font-size: 1.125rem; }
-        .text-xl { font-size: 1.25rem; }
-        .text-2xl { font-size: 1.5rem; }
-        .text-3xl { font-size: 1.875rem; }
-        .font-bold { font-weight: 700; }
-        .font-semibold { font-weight: 600; }
-        .font-medium { font-weight: 500; }
-        .w-full { width: 100%; }
-        .w-10 { width: 2.5rem; }
-        .h-10 { height: 2.5rem; }
-        .min-h-screen { min-height: 100vh; }
-        .max-w-md { max-width: 28rem; }
-        .max-w-4xl { max-width: 56rem; }
-        .max-w-7xl { max-width: 80rem; }
-        .mx-auto { margin-left: auto; margin-right: auto; }
-        .rounded-lg { border-radius: 0.5rem; }
-        .rounded-xl { border-radius: 0.75rem; }
-        .rounded-2xl { border-radius: 1rem; }
-        .rounded-full { border-radius: 9999px; }
-        .border-b { border-bottom-width: 1px; }
-        .border-t { border-top-width: 1px; }
-        .border-gray-600 { border-color: rgb(75, 85, 99); }
-        .text-gray-300 { color: rgb(209, 213, 219); }
-        .text-gray-400 { color: rgb(156, 163, 175); }
-        .text-green-400 { color: rgb(74, 222, 128); }
-        .text-red-400 { color: rgb(248, 113, 113); }
-        .text-yellow-400 { color: rgb(250, 204, 21); }
-        .text-golden { color: #FFD700; }
-        .bg-gray-800 { background-color: rgb(31, 41, 55); }
-        .bg-gray-900 { background-color: rgb(17, 24, 39); }
-        .bg-yellow-900 { background-color: rgb(113, 63, 18); }
-        .relative { position: relative; }
-        .absolute { position: absolute; }
-        .fixed { position: fixed; }
-        .top-0 { top: 0; }
-        .right-0 { right: 0; }
-        .left-0 { left: 0; }
-        .bottom-0 { bottom: 0; }
-        .inset-0 { top: 0; right: 0; bottom: 0; left: 0; }
-        .z-50 { z-index: 50; }
-        .z-10 { z-index: 10; }
-        .grid { display: grid; }
-        .grid-cols-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
-        .grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-        .grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-        .gap-4 { gap: 1rem; }
-        .gap-6 { gap: 1.5rem; }
+        .swiper-slide {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 16px;
+            overflow: hidden;
+        }
 
+        .banner-card {
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 1rem;
+        }
+
+        .banner-card h3 {
+            color: white;
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+        }
+
+        .banner-card p {
+            color: #ddd;
+            font-size: 0.9rem;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+        }
+
+        /* Sections */
+        .section-title {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: var(--gold);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .section-title a {
+            font-size: 0.9rem;
+            color: #aaa;
+            text-decoration: none;
+        }
+
+        /* Tournaments */
+        .tournaments-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .tournament-card {
+            padding: 1rem;
+            position: relative;
+        }
+
+        .tournament-card h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .tournament-details {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .tournament-details div {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .tournament-details span:first-child {
+            font-size: 0.8rem;
+            color: #aaa;
+        }
+
+        .tournament-details span:last-child {
+            font-size: 1rem;
+            color: var(--gold);
+            font-weight: bold;
+        }
+
+        .join-btn {
+            width: 100%;
+            padding: 8px;
+            background: linear-gradient(to right, var(--gold), var(--dark-gold));
+            border: none;
+            border-radius: 8px;
+            color: #1a1a1a;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* Mini Games */
+        .games-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .game-card {
+            aspect-ratio: 1/1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .game-icon {
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 215, 0, 0.2);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .game-card h3 {
+            font-size: 1rem;
+            text-align: center;
+        }
+
+        /* Game Modal */
+        .game-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1001;
+            flex-direction: column;
+        }
+
+        .game-header {
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .game-title {
+            color: var(--gold);
+            font-size: 1.2rem;
+        }
+
+        .close-game {
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .game-frame {
+            flex: 1;
+            width: 100%;
+            border: none;
+        }
+
+        /* Wallet Modal */
+        .wallet-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .wallet-box {
+            width: 90%;
+            max-width: 400px;
+            padding: 1.5rem;
+        }
+
+        .wallet-balance {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .wallet-balance h3 {
+            color: #aaa;
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .wallet-balance p {
+            font-size: 2rem;
+            color: var(--gold);
+            font-weight: bold;
+        }
+
+        .wallet-actions {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .wallet-btn-action {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .add-money {
+            background: linear-gradient(to right, var(--gold), var(--dark-gold));
+            color: #1a1a1a;
+        }
+
+        .withdraw {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid var(--glass-border);
+        }
+
+        .wallet-history h3 {
+            color: #aaa;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .transaction-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .transaction-amount {
+            font-weight: bold;
+        }
+
+        .credit {
+            color: #4CAF50;
+        }
+
+        .debit {
+            color: #F44336;
+        }
+
+        /* Payment Modal */
+        .payment-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1001;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .payment-box {
+            width: 90%;
+            max-width: 400px;
+            padding: 1.5rem;
+        }
+
+        .payment-title {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: var(--gold);
+            font-size: 1.3rem;
+        }
+
+        .payment-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .payment-option {
+            padding: 12px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--glass-border);
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .payment-option.active {
+            background: rgba(255, 215, 0, 0.2);
+            border-color: var(--gold);
+        }
+
+        .payment-option span {
+            display: block;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+
+        .custom-amount {
+            width: 100%;
+            padding: 12px 15px;
+            margin-bottom: 1rem;
+            border: none;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+        }
+
+        .proceed-btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            background: linear-gradient(to right, var(--gold), var(--dark-gold));
+            color: #1a1a1a;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* Responsive */
         @media (max-width: 768px) {
-            .max-w-7xl { max-width: 100%; }
-            .px-4 { padding-left: 1rem; padding-right: 1rem; }
-            .grid-cols-2 { grid-template-columns: 1fr; }
-            .text-3xl { font-size: 1.5rem; }
-            .text-2xl { font-size: 1.25rem; }
+            .tournaments-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .logo {
+                font-size: 2.5rem;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- Particle Background -->
-    <div class="particles-bg" id="particles"></div>
-
     <!-- Splash Screen -->
-    <div id="splashScreen" class="fixed inset-0 z-50 flex items-center justify-center golden-gradient-radial">
-        <div class="text-center animate-bounce-in">
-            <div class="splash-logo mb-4">PRO WAR</div>
-            <div class="text-golden-dark text-lg mb-8">Real Money Gaming</div>
-            <div class="loading-spinner mx-auto"></div>
-        </div>
+    <div id="splash-screen">
+        <div class="logo">PRO WAR</div>
     </div>
 
-    <!-- Main App Container -->
-    <div id="mainApp" class="hidden">
-        <!-- Auth Section -->
-        <div id="authSection" class="min-h-screen flex items-center justify-center p-4">
-            <div class="w-full max-w-md">
-                <!-- Login Form -->
-                <div id="loginForm" class="modal-content">
-                    <div class="text-center mb-6">
-                        <h1 class="text-3xl font-bold text-golden mb-2">PRO WAR</h1>
-                        <p class="text-gray-300">Enter the battlefield</p>
-                    </div>
-                    
-                    <div id="loginError" class="error-message hidden">
-                        <i class="fas fa-exclamation-triangle mr-2"></i>
-                        <span id="loginErrorText"></span>
-                    </div>
-                    
-                    <form id="loginFormElement" class="space-y-4">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-300 mb-2">Email</label>
-                            <input type="email" id="loginEmail" class="input-field" placeholder="Enter your email" required>
-                        </div>
-                        
-                        <div>
-                            <label class="block text-sm font-medium text-gray-300 mb-2">Password</label>
-                            <input type="password" id="loginPassword" class="input-field" placeholder="Enter your password" required>
-                        </div>
-                        
-                        <div id="forgotPasswordLink" class="text-center hidden">
-                            <a href="#" onclick="showForgotPassword()" class="text-golden text-sm hover:underline">Forgot Password?</a>
-                        </div>
-                        
-                        <button type="submit" class="btn-primary w-full neon-glow-hover">
-                            <span id="loginButtonText">Login</span>
-                            <div id="loginLoading" class="loading-spinner ml-2 hidden" style="display: inline-block;"></div>
-                        </button>
-                    </form>
-                    
-                    <div class="text-center mt-6">
-                        <span class="text-gray-400">Don't have an account? </span>
-                        <a href="#" onclick="showSignupForm()" class="text-golden hover:underline">Sign Up</a>
-                    </div>
-                </div>
-
-                <!-- Signup Form -->
-                <div id="signupForm" class="modal-content hidden">
-                    <div class="text-center mb-6">
-                        <h1 class="text-3xl font-bold text-golden mb-2">JOIN PRO WAR</h1>
-                        <p class="text-gray-300">Create your account</p>
-                    </div>
-                    
-                    <div id="signupError" class="error-message hidden">
-                        <i class="fas fa-exclamation-triangle mr-2"></i>
-                        <span id="signupErrorText"></span>
-                    </div>
-                    
-                    <form id="signupFormElement" class="space-y-4">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-300 mb-2">Username</label>
-                            <input type="text" id="signupUsername" class="input-field" placeholder="Choose a username" required minlength="3">
-                        </div>
-                        
-                        <div>
-                            <label class="block text-sm font-medium text-gray-300 mb-2">Email</label>
-                            <input type="email" id="signupEmail" class="input-field" placeholder="Enter your email" required>
-                        </div>
-                        
-                        <div>
-                            <label class="block text-sm font-medium text-gray-300 mb-2">Password</label>
-                            <input type="password" id="signupPassword" class="input-field" placeholder="Create a password" required minlength="6">
-                        </div>
-                        
-                        <button type="submit" class="btn-primary w-full neon-glow-hover">
-                            <span id="signupButtonText">Create Account</span>
-                            <div id="signupLoading" class="loading-spinner ml-2 hidden" style="display: inline-block;"></div>
-                        </button>
-                    </form>
-                    
-                    <div class="text-center mt-6">
-                        <span class="text-gray-400">Already have an account? </span>
-                        <a href="#" onclick="showLoginForm()" class="text-golden hover:underline">Login</a>
-                    </div>
-                </div>
-
-                <!-- Forgot Password Form -->
-                <div id="forgotPasswordForm" class="modal-content hidden">
-                    <div class="text-center mb-6">
-                        <h1 class="text-3xl font-bold text-golden mb-2">RESET PASSWORD</h1>
-                        <p class="text-gray-300">Enter your email to reset password</p>
-                    </div>
-                    
-                    <div id="forgotError" class="error-message hidden">
-                        <i class="fas fa-exclamation-triangle mr-2"></i>
-                        <span id="forgotErrorText"></span>
-                    </div>
-                    
-                    <form id="forgotPasswordFormElement" class="space-y-4">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-300 mb-2">Email</label>
-                            <input type="email" id="forgotEmail" class="input-field" placeholder="Enter your email" required>
-                        </div>
-                        
-                        <button type="submit" class="btn-primary w-full neon-glow-hover">
-                            <span id="forgotButtonText">Send Reset Link</span>
-                            <div id="forgotLoading" class="loading-spinner ml-2 hidden" style="display: inline-block;"></div>
-                        </button>
-                    </form>
-                    
-                    <div class="text-center mt-6">
-                        <a href="#" onclick="showLoginForm()" class="text-golden hover:underline">Back to Login</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Dashboard Section -->
-        <div id="dashboardSection" class="hidden min-h-screen">
-            <!-- Header -->
-            <div class="glass-morphism border-b border-gray-600 sticky top-0 z-10">
-                <div class="max-w-7xl mx-auto px-4 py-3">
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center space-x-4">
-                            <h1 class="text-2xl font-bold text-golden">PRO WAR</h1>
-                            <span class="text-sm text-gray-400">Welcome back, <span id="userNameDisplay"></span></span>
-                        </div>
-                        
-                        <div class="flex items-center space-x-4">
-                            <div class="balance-display" id="userBalance">₹0</div>
-                            <button onclick="showAddMoneyModal()" class="btn-primary">
-                                <i class="fas fa-plus mr-2"></i>Add Money
-                            </button>
-                            <button onclick="logout()" class="btn-secondary">
-                                <i class="fas fa-sign-out-alt mr-2"></i>Logout
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Main Content -->
-            <div class="max-w-7xl mx-auto px-4 py-6 space-y-6">
-                <!-- Sliding Banner -->
-                <div class="slide-container">
-                    <div class="slide-wrapper" id="bannerSlider">
-                        <div class="slide">
-                            <div class="banner-slide">
-                                <div>
-                                    <h2 class="text-2xl font-bold text-golden mb-2">Welcome to Pro War!</h2>
-                                    <p class="text-gray-300">Join tournaments and win big prizes</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="slide">
-                            <div class="banner-slide">
-                                <div>
-                                    <h2 class="text-2xl font-bold text-golden mb-2">Mega Tournament Live!</h2>
-                                    <p class="text-gray-300">₹10,000 prize pool - Join now!</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="slide">
-                            <div class="banner-slide">
-                                <div>
-                                    <h2 class="text-2xl font-bold text-golden mb-2">New Games Added!</h2>
-                                    <p class="text-gray-300">Try Ludo and Mines for instant wins</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="flex justify-center mt-4 space-x-2">
-                        <div class="banner-indicator active" onclick="goToSlide(0)"></div>
-                        <div class="banner-indicator" onclick="goToSlide(1)"></div>
-                        <div class="banner-indicator" onclick="goToSlide(2)"></div>
-                    </div>
-                </div>
-                
-                <!-- Tournaments Section -->
-                <div>
-                    <div class="flex items-center justify-between mb-6">
-                        <h2 class="text-2xl font-bold text-golden">Live Tournaments</h2>
-                        <button class="btn-secondary" onclick="refreshTournaments()">
-                            <i class="fas fa-refresh mr-2"></i>Refresh
-                        </button>
-                    </div>
-                    
-                    <div id="tournamentsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        <!-- Tournament cards will be loaded here -->
-                    </div>
-                </div>
-                
-                <!-- Mini Games Section -->
-                <div>
-                    <h2 class="text-2xl font-bold text-golden mb-6">Mini Games</h2>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div class="game-card p-6 rounded-xl cursor-pointer" onclick="playGame('ludo')">
-                            <div class="flex items-center space-x-4">
-                                <div class="game-icon">
-                                    <i class="fas fa-dice"></i>
-                                </div>
-                                <div>
-                                    <h3 class="text-xl font-bold text-golden">Ludo Master</h3>
-                                    <p class="text-gray-300">Classic board game with real money prizes</p>
-                                    <div class="mt-2">
-                                        <span class="prize-badge">Win up to ₹1000</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="game-card p-6 rounded-xl cursor-pointer" onclick="playGame('mines')">
-                            <div class="flex items-center space-x-4">
-                                <div class="game-icon">
-                                    <i class="fas fa-bomb"></i>
-                                </div>
-                                <div>
-                                    <h3 class="text-xl font-bold text-golden">Mines</h3>
-                                    <p class="text-gray-300">Find gems, avoid mines, win instant cash</p>
-                                    <div class="mt-2">
-                                        <span class="prize-badge">Instant Payouts</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Add Money Modal -->
-    <div id="addMoneyModal" class="modal-overlay hidden">
-        <div class="modal-content">
-            <div class="flex items-center justify-between mb-6">
-                <h3 class="text-2xl font-bold text-golden">Add Money</h3>
-                <button onclick="hideAddMoneyModal()" class="text-gray-400 hover:text-white">
-                    <i class="fas fa-times text-xl"></i>
-                </button>
-            </div>
-            
-            <div id="addMoneyError" class="error-message hidden">
-                <i class="fas fa-exclamation-triangle mr-2"></i>
-                <span id="addMoneyErrorText"></span>
-            </div>
-            
-            <form id="addMoneyForm" class="space-y-4">
-                <div>
-                    <label class="block text-sm font-medium text-gray-300 mb-2">Amount (₹)</label>
-                    <input type="number" id="addMoneyAmount" class="input-field" placeholder="Enter amount" min="10" max="50000" required>
-                </div>
-                
-                <div class="grid grid-cols-3 gap-2 mb-4">
-                    <button type="button" onclick="setAddAmount(100)" class="btn-secondary">₹100</button>
-                    <button type="button" onclick="setAddAmount(500)" class="btn-secondary">₹500</button>
-                    <button type="button" onclick="setAddAmount(1000)" class="btn-secondary">₹1000</button>
-                </div>
-                
-                <button type="submit" class="btn-primary w-full neon-glow-hover">
-                    <i class="fas fa-credit-card mr-2"></i>
-                    <span id="addMoneyButtonText">Pay with Razorpay</span>
-                    <div id="addMoneyLoading" class="loading-spinner ml-2 hidden" style="display: inline-block;"></div>
-                </button>
+    <!-- Auth Screens -->
+    <div id="login-container" class="auth-container">
+        <div class="auth-box glass-card">
+            <h2 class="auth-title">Login</h2>
+            <form id="login-form" class="auth-form">
+                <div id="login-error" class="error-message"></div>
+                <input type="email" id="login-email" placeholder="Email" required>
+                <input type="password" id="login-password" placeholder="Password" required>
+                <button type="submit" class="auth-btn">Login</button>
             </form>
+            <div id="forgot-password" style="text-align: right; margin-top: -0.5rem;">
+                <a href="#" id="forgot-link" style="color: #aaa; font-size: 0.9rem;">Forgot Password?</a>
+            </div>
+            <div class="auth-toggle">
+                Don't have an account? <span id="show-signup">Sign Up</span>
+            </div>
         </div>
+    </div>
+
+    <div id="signup-container" class="auth-container">
+        <div class="auth-box glass-card">
+            <h2 class="auth-title">Sign Up</h2>
+            <form id="signup-form" class="auth-form">
+                <div id="signup-error" class="error-message"></div>
+                <input type="text" id="signup-username" placeholder="Username" required>
+                <input type="email" id="signup-email" placeholder="Email" required>
+                <input type="password" id="signup-password" placeholder="Password" required>
+                <button type="submit" class="auth-btn">Sign Up</button>
+            </form>
+            <div class="auth-toggle">
+                Already have an account? <span id="show-login">Login</span>
+            </div>
+        </div>
+    </div>
+
+    <div id="forgot-container" class="auth-container">
+        <div class="auth-box glass-card">
+            <h2 class="auth-title">Reset Password</h2>
+            <form id="forgot-form" class="auth-form">
+                <div id="forgot-error" class="error-message"></div>
+                <input type="email" id="forgot-email" placeholder="Email" required>
+                <button type="submit" class="auth-btn">Send Reset Link</button>
+            </form>
+            <div class="auth-toggle">
+                Remember your password? <span id="show-login-from-forgot">Login</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App -->
+    <div id="app-container">
+        <header>
+            <div class="app-logo">PRO WAR</div>
+            <div class="user-menu">
+                <button id="wallet-btn" class="wallet-btn">
+                    <span id="wallet-amount">₹0</span>
+                </button>
+                <div id="profile-btn" class="profile-pic">U</div>
+            </div>
+        </header>
+
+        <main>
+            <!-- Banner Slider -->
+            <div class="swiper">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide">
+                        <div class="banner-card" style="background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://via.placeholder.com/600x400?text=Win+Big+Today')">
+                            <h3>Daily Jackpot</h3>
+                            <p>Play now to win up to ₹50,000</p>
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <div class="banner-card" style="background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://via.placeholder.com/600x400?text=New+Tournaments')">
+                            <h3>New Tournaments</h3>
+                            <p>Join exclusive competitions</p>
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <div class="banner-card" style="background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://via.placeholder.com/600x400?text=Refer+and+Earn')">
+                            <h3>Refer & Earn</h3>
+                            <p>Get ₹100 for each friend</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="swiper-pagination"></div>
+            </div>
+
+            <!-- Live Tournaments -->
+            <section>
+                <h3 class="section-title">
+                    Live Tournaments
+                    <a href="#">View All</a>
+                </h3>
+                <div id="tournaments-container" class="tournaments-grid">
+                    <!-- Filled by JavaScript -->
+                </div>
+            </section>
+
+            <!-- Mini Games -->
+            <section>
+                <h3 class="section-title">Featured Games</h3>
+                <div class="games-grid">
+                    <div id="ludo-game" class="game-card glass-card">
+                        <div class="game-icon">🎲</div>
+                        <h3>Ludo King</h3>
+                    </div>
+                    <div id="mines-game" class="game-card glass-card">
+                        <div class="game-icon">💣</div>
+                        <h3>Mines</h3>
+                    </div>
+                </div>
+            </section>
+        </main>
     </div>
 
     <!-- Game Modal -->
-    <div id="gameModal" class="modal-overlay hidden">
-        <div class="modal-content" style="max-width: 90vw; max-height: 90vh;">
-            <div class="flex items-center justify-between mb-4">
-                <h3 class="text-2xl font-bold text-golden" id="gameTitle">Game</h3>
-                <button onclick="hideGameModal()" class="text-gray-400 hover:text-white">
-                    <i class="fas fa-times text-xl"></i>
-                </button>
+    <div id="game-modal" class="game-modal">
+        <div class="game-header">
+            <div class="game-title" id="current-game-title">Game</div>
+            <div class="close-game" id="close-game">&times;</div>
+        </div>
+        <iframe id="game-frame" class="game-frame" src="" frameborder="0"></iframe>
+    </div>
+
+    <!-- Wallet Modal -->
+    <div id="wallet-modal" class="wallet-modal">
+        <div class="wallet-box glass-card">
+            <div class="wallet-balance">
+                <h3>Wallet Balance</h3>
+                <p id="modal-wallet-amount">₹0</p>
             </div>
-            <iframe id="gameFrame" src="" width="100%" height="600" frameborder="0" class="rounded-lg"></iframe>
+            <div class="wallet-actions">
+                <button id="add-money-btn" class="wallet-btn-action add-money">Add Money</button>
+                <button id="withdraw-btn" class="wallet-btn-action withdraw">Withdraw</button>
+            </div>
+            <div class="wallet-history">
+                <h3>Transaction History</h3>
+                <div id="transactions-list">
+                    <!-- Filled by JavaScript -->
+                </div>
+            </div>
+            <button id="close-wallet" style="margin-top: 1.5rem; width: 100%; padding: 8px; background: rgba(255,255,255,0.1); border: 1px solid var(--glass-border); color: white; border-radius: 8px; cursor: pointer;">
+                Close
+            </button>
         </div>
     </div>
 
-    <script>
-        // Global variables
-        let currentUser = null;
-        let currentSlide = 0;
-        let slideInterval = null;
-        let loginAttempts = 0;
-        const maxLoginAttempts = 3;
+    <!-- Payment Modal -->
+    <div id="payment-modal" class="payment-modal">
+        <div class="wallet-box glass-card">
+            <h3 class="payment-title">Add Money to Wallet</h3>
+            <div class="payment-options">
+                <div class="payment-option" data-amount="100">
+                    ₹100
+                </div>
+                <div class="payment-option" data-amount="300">
+                    ₹300
+                </div>
+                <div class="payment-option" data-amount="500">
+                    ₹500
+                </div>
+                <div class="payment-option" data-amount="1000">
+                    ₹1000
+                </div>
+            </div>
+            <input type="number" id="custom-amount" class="custom-amount" placeholder="Enter custom amount">
+            <button id="proceed-payment" class="proceed-btn">Proceed to Pay</button>
+            <button id="close-payment" style="margin-top: 1rem; width: 100%; padding: 8px; background: rgba(255,255,255,0.1); border: 1px solid var(--glass-border); color: white; border-radius: 8px; cursor: pointer;">
+                Cancel
+            </button>
+        </div>
+    </div>
 
-        // Initialize app
-        document.addEventListener('DOMContentLoaded', function() {
-            initializeParticles();
-            setTimeout(showMainApp, 2500);
-            
-            // Initialize banner slider
+    <!-- Withdraw Modal -->
+    <div id="withdraw-modal" class="payment-modal">
+        <div class="wallet-box glass-card">
+            <h3 class="payment-title">Withdraw Money</h3>
+            <input type="number" id="withdraw-amount" class="custom-amount" placeholder="Enter amount to withdraw">
+            <input type="text" id="upi-id" class="custom-amount" placeholder="Enter UPI ID" style="margin-top: 1rem;">
+            <button id="proceed-withdraw" class="proceed-btn">Request Withdrawal</button>
+            <button id="close-withdraw" style="margin-top: 1rem; width: 100%; padding: 8px; background: rgba(255,255,255,0.1); border: 1px solid var(--glass-border); color: white; border-radius: 8px; cursor: pointer;">
+                Cancel
+            </button>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script>
+        // Initialize Supabase
+        const supabaseUrl = 'https://udzedfjohdvdbuqszpsb.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVkemVkZmpvaGR2ZGJ1cXN6cHNiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE1MTk4OTYsImV4cCI6MjA2NzA5NTg5Nn0.XXqF4YUS_56lxv7CesmlnfdXeEUZp1bp1y1EKpQY7q8';
+        const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+        // DOM Elements
+        const splashScreen = document.getElementById('splash-screen');
+        const loginContainer = document.getElementById('login-container');
+        const signupContainer = document.getElementById('signup-container');
+        const forgotContainer = document.getElementById('forgot-container');
+        const appContainer = document.getElementById('app-container');
+        const walletAmount = document.getElementById('wallet-amount');
+        const modalWalletAmount = document.getElementById('modal-wallet-amount');
+        const tournamentsContainer = document.getElementById('tournaments-container');
+        const transactionsList = document.getElementById('transactions-list');
+        const walletModal = document.getElementById('wallet-modal');
+        const paymentModal = document.getElementById('payment-modal');
+        const withdrawModal = document.getElementById('withdraw-modal');
+        const gameModal = document.getElementById('game-modal');
+        const gameFrame = document.getElementById('game-frame');
+        const currentGameTitle = document.getElementById('current-game-title');
+
+        // Auth Elements
+        const loginForm = document.getElementById('login-form');
+        const signupForm = document.getElementById('signup-form');
+        const forgotForm = document.getElementById('forgot-form');
+        const loginError = document.getElementById('login-error');
+        const signupError = document.getElementById('signup-error');
+        const forgotError = document.getElementById('forgot-error');
+        const showSignup = document.getElementById('show-signup');
+        const showLogin = document.getElementById('show-login');
+        const showLoginFromForgot = document.getElementById('show-login-from-forgot');
+        const forgotLink = document.getElementById('forgot-link');
+
+        // Game Elements
+        const ludoGame = document.getElementById('ludo-game');
+        const minesGame = document.getElementById('mines-game');
+        const closeGame = document.getElementById('close-game');
+
+        // Wallet Elements
+        const walletBtn = document.getElementById('wallet-btn');
+        const addMoneyBtn = document.getElementById('add-money-btn');
+        const withdrawBtn = document.getElementById('withdraw-btn');
+        const closeWallet = document.getElementById('close-wallet');
+        const paymentOptions = document.querySelectorAll('.payment-option');
+        const proceedPayment = document.getElementById('proceed-payment');
+        const customAmount = document.getElementById('custom-amount');
+        const closePayment = document.getElementById('close-payment');
+        const proceedWithdraw = document.getElementById('proceed-withdraw');
+        const withdrawAmount = document.getElementById('withdraw-amount');
+        const upiId = document.getElementById('upi-id');
+        const closeWithdraw = document.getElementById('close-withdraw');
+
+        // State
+        let currentUser = null;
+        let selectedAmount = 0;
+        let loginAttempts = 0;
+
+        // Initialize Swiper
+        const swiper = new Swiper('.swiper', {
+            loop: true,
+            autoplay: {
+                delay: 3000,
+            },
+            pagination: {
+                el: '.swiper-pagination',
+                clickable: true,
+            },
+        });
+
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => {
-                if (document.getElementById('dashboardSection').classList.contains('hidden')) return;
-                startBannerSlider();
+                checkAuth();
             }, 3000);
         });
 
-        // Particle background
-        function initializeParticles() {
-            const particlesContainer = document.getElementById('particles');
-            for (let i = 0; i < 50; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'particle';
-                particle.style.left = Math.random() * 100 + '%';
-                particle.style.top = Math.random() * 100 + '%';
-                particle.style.animationDelay = Math.random() * 6 + 's';
-                particlesContainer.appendChild(particle);
-            }
-        }
-
-        // Show main app after splash
-        function showMainApp() {
-            document.getElementById('splashScreen').classList.add('hidden');
-            document.getElementById('mainApp').classList.remove('hidden');
-            
-            // Check if user is already logged in
-            const savedUser = localStorage.getItem('proWarUser');
-            if (savedUser) {
-                currentUser = JSON.parse(savedUser);
-                showDashboard();
-            }
-        }
-
-        // Auth functions
-        function showSignupForm() {
-            document.getElementById('loginForm').classList.add('hidden');
-            document.getElementById('signupForm').classList.remove('hidden');
-            document.getElementById('forgotPasswordForm').classList.add('hidden');
-        }
-
-        function showLoginForm() {
-            document.getElementById('loginForm').classList.remove('hidden');
-            document.getElementById('signupForm').classList.add('hidden');
-            document.getElementById('forgotPasswordForm').classList.add('hidden');
-        }
-
-        function showForgotPassword() {
-            document.getElementById('loginForm').classList.add('hidden');
-            document.getElementById('signupForm').classList.add('hidden');
-            document.getElementById('forgotPasswordForm').classList.remove('hidden');
-        }
-
-        // Login form handler
-        document.getElementById('loginFormElement').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            const email = document.getElementById('loginEmail').value;
-            const password = document.getElementById('loginPassword').value;
-            
-            setLoading('login', true);
-            hideError('login');
-            
-            try {
-                const response = await fetch('/api/auth/login', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email, password })
-                });
-                
-                const data = await response.json();
-                
-                if (response.ok) {
-                    currentUser = data.user;
-                    localStorage.setItem('proWarUser', JSON.stringify(currentUser));
-                    
-                    // Redirect based on user role
-                    if (currentUser.is_owner) {
-                        window.location.href = '/owner.html';
-                    } else if (currentUser.is_admin) {
-                        window.location.href = '/admin.html';
-                    } else {
-                        showDashboard();
-                    }
-                    
-                    loginAttempts = 0; // Reset attempts on successful login
-                } else {
-                    loginAttempts++;
-                    if (loginAttempts >= maxLoginAttempts) {
-                        document.getElementById('forgotPasswordLink').classList.remove('hidden');
-                    }
-                    showError('login', data.message);
-                }
-            } catch (error) {
-                showError('login', 'Network error. Please try again.');
-            }
-            
-            setLoading('login', false);
+        // Auth Event Listeners
+        showSignup.addEventListener('click', () => {
+            loginContainer.style.display = 'none';
+            signupContainer.style.display = 'flex';
+            loginError.textContent = '';
         });
 
-        // Signup form handler
-        document.getElementById('signupFormElement').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            const username = document.getElementById('signupUsername').value;
-            const email = document.getElementById('signupEmail').value;
-            const password = document.getElementById('signupPassword').value;
-            
-            setLoading('signup', true);
-            hideError('signup');
-            
-            try {
-                const response = await fetch('/api/auth/signup', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ username, email, password })
-                });
-                
-                const data = await response.json();
-                
-                if (response.ok) {
-                    showSuccess('signup', 'Account created successfully! Please login.');
-                    setTimeout(() => showLoginForm(), 2000);
-                } else {
-                    showError('signup', data.message);
-                }
-            } catch (error) {
-                showError('signup', 'Network error. Please try again.');
-            }
-            
-            setLoading('signup', false);
+        showLogin.addEventListener('click', () => {
+            signupContainer.style.display = 'none';
+            loginContainer.style.display = 'flex';
+            signupError.textContent = '';
         });
 
-        // Forgot password form handler
-        document.getElementById('forgotPasswordFormElement').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            const email = document.getElementById('forgotEmail').value;
-            
-            setLoading('forgot', true);
-            hideError('forgot');
-            
-            // Simulate forgot password (since not implemented in backend)
-            setTimeout(() => {
-                showSuccess('forgot', 'Password reset link sent to your email!');
-                setTimeout(() => showLoginForm(), 2000);
-                setLoading('forgot', false);
-            }, 1000);
+        showLoginFromForgot.addEventListener('click', () => {
+            forgotContainer.style.display = 'none';
+            loginContainer.style.display = 'flex';
+            forgotError.textContent = '';
         });
 
-        // Show dashboard
-        function showDashboard() {
-            document.getElementById('authSection').classList.add('hidden');
-            document.getElementById('dashboardSection').classList.remove('hidden');
-            
-            // Update user info
-            document.getElementById('userNameDisplay').textContent = currentUser.username;
-            document.getElementById('userBalance').textContent = `₹${currentUser.wallet_balance}`;
-            
-            // Load tournaments
-            loadTournaments();
-            startBannerSlider();
-        }
+        forgotLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            loginContainer.style.display = 'none';
+            forgotContainer.style.display = 'flex';
+            loginError.textContent = '';
+        });
 
-        // Banner slider functions
-        function startBannerSlider() {
-            slideInterval = setInterval(() => {
-                currentSlide = (currentSlide + 1) % 3;
-                goToSlide(currentSlide);
-            }, 4000);
-        }
-
-        function goToSlide(index) {
-            currentSlide = index;
-            const slider = document.getElementById('bannerSlider');
-            slider.style.transform = `translateX(-${index * 100}%)`;
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
             
-            // Update indicators
-            document.querySelectorAll('.banner-indicator').forEach((indicator, i) => {
-                indicator.classList.toggle('active', i === index);
+            const { data, error } = await supabase.auth.signInWithPassword({
+                email,
+                password
             });
-        }
 
-        // Load tournaments
-        async function loadTournaments() {
-            try {
-                const response = await fetch('/api/tournaments');
-                const tournaments = await response.json();
-                
-                const container = document.getElementById('tournamentsContainer');
-                container.innerHTML = '';
-                
-                if (tournaments.length === 0) {
-                    container.innerHTML = `
-                        <div class="col-span-full text-center py-12">
-                            <i class="fas fa-trophy text-6xl text-gray-600 mb-4"></i>
-                            <h3 class="text-xl font-semibold text-gray-300 mb-2">No tournaments available</h3>
-                            <p class="text-gray-400">Check back later for new tournaments!</p>
-                        </div>
-                    `;
-                    return;
+            if (error) {
+                loginAttempts++;
+                if (loginAttempts >= 3) {
+                    forgotLink.style.display = 'block';
                 }
-                
-                tournaments.forEach(tournament => {
-                    const card = createTournamentCard(tournament);
-                    container.appendChild(card);
-                });
-            } catch (error) {
-                console.error('Error loading tournaments:', error);
-            }
-        }
-
-        function createTournamentCard(tournament) {
-            const card = document.createElement('div');
-            card.className = 'tournament-card p-6 rounded-xl';
-            
-            card.innerHTML = `
-                <div class="flex items-center justify-between mb-4">
-                    <h3 class="text-xl font-bold text-golden">${tournament.title}</h3>
-                    <span class="prize-badge">₹${tournament.prize_pool}</span>
-                </div>
-                <div class="space-y-2 mb-4">
-                    <div class="flex justify-between">
-                        <span class="text-gray-300">Game:</span>
-                        <span class="text-white">${tournament.game}</span>
-                    </div>
-                    <div class="flex justify-between">
-                        <span class="text-gray-300">Entry Fee:</span>
-                        <span class="entry-fee">₹${tournament.entry_fee}</span>
-                    </div>
-                    <div class="flex justify-between">
-                        <span class="text-gray-300">Players:</span>
-                        <span class="text-white">${tournament.current_players}/${tournament.max_players}</span>
-                    </div>
-                </div>
-                <button onclick="joinTournament(${tournament.id})" class="btn-primary w-full neon-glow-hover">
-                    <i class="fas fa-play mr-2"></i>Join Tournament
-                </button>
-            `;
-            
-            return card;
-        }
-
-        async function joinTournament(tournamentId) {
-            if (!currentUser) {
-                showError('general', 'Please login to join tournaments');
+                loginError.textContent = error.message;
                 return;
             }
-            
-            try {
-                const response = await fetch(`/api/tournaments/${tournamentId}/join`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ userId: currentUser.id })
-                });
-                
-                const data = await response.json();
-                
-                if (response.ok) {
-                    showSuccess('general', 'Successfully joined tournament!');
-                    loadTournaments(); // Refresh tournaments
-                } else {
-                    showError('general', data.message);
-                }
-            } catch (error) {
-                showError('general', 'Error joining tournament. Please try again.');
-            }
-        }
 
-        function refreshTournaments() {
-            loadTournaments();
-        }
+            currentUser = data.user;
+            await fetchUserProfile();
+        });
 
-        // Add money modal functions
-        function showAddMoneyModal() {
-            document.getElementById('addMoneyModal').classList.remove('hidden');
-        }
-
-        function hideAddMoneyModal() {
-            document.getElementById('addMoneyModal').classList.add('hidden');
-            document.getElementById('addMoneyForm').reset();
-            hideError('addMoney');
-        }
-
-        function setAddAmount(amount) {
-            document.getElementById('addMoneyAmount').value = amount;
-        }
-
-        // Add money form handler
-        document.getElementById('addMoneyForm').addEventListener('submit', function(e) {
+        signupForm.addEventListener('submit', async (e) => {
             e.preventDefault();
+            const email = document.getElementById('signup-email').value;
+            const password = document.getElementById('signup-password').value;
+            const username = document.getElementById('signup-username').value;
             
-            const amount = parseFloat(document.getElementById('addMoneyAmount').value);
-            
-            if (amount < 10 || amount > 50000) {
-                showError('addMoney', 'Amount must be between ₹10 and ₹50,000');
+            // First sign up with email and password
+            const { data: authData, error: authError } = await supabase.auth.signUp({
+                email,
+                password
+            });
+
+            if (authError) {
+                signupError.textContent = authError.message;
                 return;
             }
+
+            // Then create a profile in the profiles table
+            const { data: profileData, error: profileError } = await supabase
+                .from('profiles')
+                .insert([
+                    { 
+                        id: authData.user.id, 
+                        username,
+                        wallet_balance: 0,
+                        is_owner: false,
+                        is_admin: false
+                    }
+                ])
+                .select();
+
+            if (profileError) {
+                signupError.textContent = profileError.message;
+                return;
+            }
+
+            // Show success message and redirect to login
+            signupError.textContent = '';
+            signupError.style.color = '#4CAF50';
+            signupError.textContent = 'Account created successfully! Please login.';
             
-            // Initialize Razorpay payment
+            // Clear form
+            document.getElementById('signup-email').value = '';
+            document.getElementById('signup-password').value = '';
+            document.getElementById('signup-username').value = '';
+            
+            // Show login after 2 seconds
+            setTimeout(() => {
+                signupContainer.style.display = 'none';
+                loginContainer.style.display = 'flex';
+                signupError.textContent = '';
+                signupError.style.color = '#ff6b6b';
+            }, 2000);
+        });
+
+        forgotForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('forgot-email').value;
+            
+            const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
+                redirectTo: 'https://udzedfjohdvdbuqszpsb.supabase.co/auth/reset-password'
+            });
+
+            if (error) {
+                forgotError.textContent = error.message;
+                return;
+            }
+
+            forgotError.textContent = '';
+            forgotError.style.color = '#4CAF50';
+            forgotError.textContent = 'Password reset link sent to your email!';
+            
+            // Clear form
+            document.getElementById('forgot-email').value = '';
+            
+            // Show login after 3 seconds
+            setTimeout(() => {
+                forgotContainer.style.display = 'none';
+                loginContainer.style.display = 'flex';
+                forgotError.textContent = '';
+                forgotError.style.color = '#ff6b6b';
+            }, 3000);
+        });
+
+        // Game Event Listeners
+        ludoGame.addEventListener('click', () => {
+            openGame('Ludo King', 'https://ludo-king-game.vercel.app/');
+        });
+
+        minesGame.addEventListener('click', () => {
+            openGame('Mines', 'https://mines-game-html.vercel.app/');
+        });
+
+        closeGame.addEventListener('click', () => {
+            gameModal.style.display = 'none';
+            gameFrame.src = '';
+        });
+
+        // Wallet Event Listeners
+        walletBtn.addEventListener('click', () => {
+            walletModal.style.display = 'flex';
+            fetchTransactions();
+        });
+
+        closeWallet.addEventListener('click', () => {
+            walletModal.style.display = 'none';
+        });
+
+        addMoneyBtn.addEventListener('click', () => {
+            walletModal.style.display = 'none';
+            paymentModal.style.display = 'flex';
+            selectedAmount = 0;
+            customAmount.value = '';
+            document.querySelectorAll('.payment-option').forEach(option => {
+                option.classList.remove('active');
+            });
+        });
+
+        withdrawBtn.addEventListener('click', () => {
+            walletModal.style.display = 'none';
+            withdrawModal.style.display = 'flex';
+            withdrawAmount.value = '';
+            upiId.value = '';
+        });
+
+        paymentOptions.forEach(option => {
+            option.addEventListener('click', () => {
+                selectedAmount = parseInt(option.dataset.amount);
+                customAmount.value = '';
+                document.querySelectorAll('.payment-option').forEach(opt => {
+                    opt.classList.remove('active');
+                });
+                option.classList.add('active');
+            });
+        });
+
+        customAmount.addEventListener('input', () => {
+            if (customAmount.value) {
+                selectedAmount = parseInt(customAmount.value);
+                document.querySelectorAll('.payment-option').forEach(option => {
+                    option.classList.remove('active');
+                });
+            }
+        });
+
+        proceedPayment.addEventListener('click', async () => {
+            if (!selectedAmount || selectedAmount < 10) {
+                alert('Please select a valid amount (minimum ₹10)');
+                return;
+            }
+
+            // Create a Razorpay order
             const options = {
-                key: 'your_razorpay_key_here', // Replace with actual key
-                amount: amount * 100, // Amount in paise
+                key: 'rzp_test_1DP5mmOlF5G5ag', // Test key - replace with your actual key
+                amount: selectedAmount * 100, // Razorpay expects amount in paise
                 currency: 'INR',
                 name: 'Pro War',
-                description: 'Add money to wallet',
-                image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiByeD0iOCIgZmlsbD0iI0ZGRDcwMCIvPgo8dGV4dCB4PSIyMCIgeT0iMjYiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxOCIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IiMwMDAiIHRleHQtYW5jaG9yPSJtaWRkbGUiPlA8L3RleHQ+Cjwvc3ZnPgo=',
-                handler: function(response) {
-                    processPayment(response.razorpay_payment_id, amount);
+                description: 'Add Money to Wallet',
+                image: 'https://via.placeholder.com/150?text=Pro+War',
+                handler: async function(response) {
+                    // Payment successful - update wallet balance
+                    const { data: userData, error: userError } = await supabase
+                        .from('profiles')
+                        .select('wallet_balance')
+                        .eq('id', currentUser.id)
+                        .single();
+
+                    if (userError) {
+                        console.error('Error fetching wallet balance:', userError);
+                        return;
+                    }
+
+                    const newBalance = userData.wallet_balance + selectedAmount;
+
+                    const { error: updateError } = await supabase
+                        .from('profiles')
+                        .update({ wallet_balance: newBalance })
+                        .eq('id', currentUser.id);
+
+                    if (updateError) {
+                        console.error('Error updating wallet balance:', updateError);
+                        return;
+                    }
+
+                    // Record transaction
+                    const { error: transactionError } = await supabase
+                        .from('transactions')
+                        .insert([
+                            { 
+                                user_id: currentUser.id,
+                                amount: selectedAmount,
+                                type: 'credit',
+                                description: 'Wallet top-up via Razorpay',
+                                status: 'completed'
+                            }
+                        ]);
+
+                    if (transactionError) {
+                        console.error('Error recording transaction:', transactionError);
+                    }
+
+                    // Update UI
+                    walletAmount.textContent = `₹${newBalance}`;
+                    modalWalletAmount.textContent = `₹${newBalance}`;
+                    paymentModal.style.display = 'none';
+                    walletModal.style.display = 'flex';
+                    fetchTransactions();
                 },
                 prefill: {
-                    email: currentUser.email,
-                    contact: ''
+                    name: currentUser?.email || '',
+                    email: currentUser?.email || ''
                 },
                 theme: {
                     color: '#FFD700'
                 }
             };
-            
+
             const rzp = new Razorpay(options);
             rzp.open();
         });
 
-        async function processPayment(paymentId, amount) {
-            setLoading('addMoney', true);
-            
-            try {
-                const response = await fetch(`/api/wallet/${currentUser.id}/add`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        amount: amount.toString(),
-                        payment_id: paymentId,
-                        payment_method: 'razorpay'
-                    })
-                });
-                
-                const data = await response.json();
-                
-                if (response.ok) {
-                    currentUser.wallet_balance = data.balance;
-                    localStorage.setItem('proWarUser', JSON.stringify(currentUser));
-                    document.getElementById('userBalance').textContent = `₹${data.balance}`;
-                    
-                    hideAddMoneyModal();
-                    showSuccess('general', `₹${amount} added successfully!`);
-                } else {
-                    showError('addMoney', data.message);
-                }
-            } catch (error) {
-                showError('addMoney', 'Payment processing failed. Please try again.');
+        closePayment.addEventListener('click', () => {
+            paymentModal.style.display = 'none';
+            walletModal.style.display = 'flex';
+        });
+
+        proceedWithdraw.addEventListener('click', async () => {
+            const amount = parseInt(withdrawAmount.value);
+            const upi = upiId.value.trim();
+
+            if (!amount || amount < 100) {
+                alert('Minimum withdrawal amount is ₹100');
+                return;
             }
-            
-            setLoading('addMoney', false);
-        }
 
-        // Game functions
-        function playGame(gameType) {
-            const gameTitle = gameType === 'ludo' ? 'Ludo Master' : 'Mines';
-            const gameUrl = `/games/${gameType}/index.html`;
-            
-            document.getElementById('gameTitle').textContent = gameTitle;
-            document.getElementById('gameFrame').src = gameUrl;
-            document.getElementById('gameModal').classList.remove('hidden');
-        }
+            if (!upi || !upi.includes('@')) {
+                alert('Please enter a valid UPI ID');
+                return;
+            }
 
-        function hideGameModal() {
-            document.getElementById('gameModal').classList.add('hidden');
-            document.getElementById('gameFrame').src = '';
-        }
+            // Check if user has sufficient balance
+            const { data: userData, error: userError } = await supabase
+                .from('profiles')
+                .select('wallet_balance')
+                .eq('id', currentUser.id)
+                .single();
 
-        // Utility functions
-        function setLoading(type, loading) {
-            const button = document.getElementById(`${type}ButtonText`);
-            const spinner = document.getElementById(`${type}Loading`);
-            const form = document.getElementById(`${type}FormElement`) || document.getElementById(`${type}Form`);
+            if (userError) {
+                console.error('Error fetching wallet balance:', userError);
+                return;
+            }
+
+            if (userData.wallet_balance < amount) {
+                alert('Insufficient balance for withdrawal');
+                return;
+            }
+
+            // In a real app, you would call Cashfree Payout API here
+            // For demo, we'll simulate a successful withdrawal
             
-            if (loading) {
-                button.style.display = 'none';
-                spinner.classList.remove('hidden');
-                if (form) {
-                    const submitBtn = form.querySelector('button[type="submit"]');
-                    if (submitBtn) submitBtn.disabled = true;
-                }
+            // Deduct from wallet
+            const newBalance = userData.wallet_balance - amount;
+
+            const { error: updateError } = await supabase
+                .from('profiles')
+                .update({ wallet_balance: newBalance })
+                .eq('id', currentUser.id);
+
+            if (updateError) {
+                console.error('Error updating wallet balance:', updateError);
+                return;
+            }
+
+            // Record transaction
+            const { error: transactionError } = await supabase
+                .from('transactions')
+                .insert([
+                    { 
+                        user_id: currentUser.id,
+                        amount: amount,
+                        type: 'debit',
+                        description: `Withdrawal to ${upi}`,
+                        status: 'pending' // Would be 'completed' after Cashfree processes it
+                    }
+                ]);
+
+            if (transactionError) {
+                console.error('Error recording transaction:', transactionError);
+            }
+
+            // Update UI
+            walletAmount.textContent = `₹${newBalance}`;
+            modalWalletAmount.textContent = `₹${newBalance}`;
+            withdrawModal.style.display = 'none';
+            walletModal.style.display = 'flex';
+            fetchTransactions();
+
+            alert(`Withdrawal request of ₹${amount} to ${upi} has been submitted. It will be processed within 24 hours.`);
+        });
+
+        closeWithdraw.addEventListener('click', () => {
+            withdrawModal.style.display = 'none';
+            walletModal.style.display = 'flex';
+        });
+
+        // Functions
+        async function checkAuth() {
+            const { data: { user }, error } = await supabase.auth.getUser();
+            
+            if (user) {
+                currentUser = user;
+                await fetchUserProfile();
             } else {
-                button.style.display = 'inline';
-                spinner.classList.add('hidden');
-                if (form) {
-                    const submitBtn = form.querySelector('button[type="submit"]');
-                    if (submitBtn) submitBtn.disabled = false;
-                }
+                showAuthScreen();
             }
         }
 
-        function showError(type, message) {
-            const errorDiv = document.getElementById(`${type}Error`);
-            const errorText = document.getElementById(`${type}ErrorText`);
-            
-            if (errorDiv && errorText) {
-                errorText.textContent = message;
-                errorDiv.classList.remove('hidden');
-            }
+        function showAuthScreen() {
+            splashScreen.style.display = 'none';
+            loginContainer.style.display = 'flex';
         }
 
-        function hideError(type) {
-            const errorDiv = document.getElementById(`${type}Error`);
-            if (errorDiv) {
-                errorDiv.classList.add('hidden');
+        async function fetchUserProfile() {
+            const { data, error } = await supabase
+                .from('profiles')
+                .select('*')
+                .eq('id', currentUser.id)
+                .single();
+
+            if (error) {
+                console.error('Error fetching profile:', error);
+                return;
             }
+
+            // Update wallet display
+            walletAmount.textContent = `₹${data.wallet_balance}`;
+            modalWalletAmount.textContent = `₹${data.wallet_balance}`;
+
+            // Update profile initial
+            const profileBtn = document.getElementById('profile-btn');
+            profileBtn.textContent = data.username.charAt(0).toUpperCase();
+
+            // Show appropriate screen based on role
+            splashScreen.style.display = 'none';
+            loginContainer.style.display = 'none';
+            signupContainer.style.display = 'none';
+            forgotContainer.style.display = 'none';
+            appContainer.style.display = 'block';
+
+            // For demo, we're just showing user.html regardless of role
+            // In a real app, you would redirect to owner.html or admin.html if those roles are true
+            fetchTournaments();
         }
 
-        function showSuccess(type, message) {
-            const errorDiv = document.getElementById(`${type}Error`);
-            if (errorDiv) {
-                errorDiv.className = 'success-message';
-                errorDiv.querySelector('span').textContent = message;
-                errorDiv.querySelector('i').className = 'fas fa-check-circle mr-2';
-                errorDiv.classList.remove('hidden');
+        async function fetchTournaments() {
+            const { data, error } = await supabase
+                .from('tournaments')
+                .select('*')
+                .order('created_at', { ascending: false })
+                .limit(5);
+
+            if (error) {
+                console.error('Error fetching tournaments:', error);
+                return;
             }
+
+            tournamentsContainer.innerHTML = '';
+            data.forEach(tournament => {
+                const card = document.createElement('div');
+                card.className = 'tournament-card glass-card';
+                card.innerHTML = `
+                    <h3>${tournament.name}</h3>
+                    <div class="tournament-details">
+                        <div>
+                            <span>Entry Fee</span>
+                            <span>₹${tournament.entry_fee}</span>
+                        </div>
+                        <div>
+                            <span>Prize Pool</span>
+                            <span>₹${tournament.prize_pool}</span>
+                        </div>
+                    </div>
+                    <button class="join-btn" data-id="${tournament.id}" data-fee="${tournament.entry_fee}">Join Now</button>
+                `;
+                tournamentsContainer.appendChild(card);
+            });
+
+            // Add event listeners to join buttons
+            document.querySelectorAll('.join-btn').forEach(button => {
+                button.addEventListener('click', async (e) => {
+                    const tournamentId = e.target.dataset.id;
+                    const entryFee = parseInt(e.target.dataset.fee);
+                    
+                    // Check if user has sufficient balance
+                    const { data: userData, error: userError } = await supabase
+                        .from('profiles')
+                        .select('wallet_balance')
+                        .eq('id', currentUser.id)
+                        .single();
+
+                    if (userError) {
+                        console.error('Error fetching wallet balance:', userError);
+                        return;
+                    }
+
+                    if (userData.wallet_balance < entryFee) {
+                        alert('Insufficient balance to join this tournament');
+                        walletModal.style.display = 'flex';
+                        return;
+                    }
+
+                    // Deduct entry fee
+                    const newBalance = userData.wallet_balance - entryFee;
+
+                    const { error: updateError } = await supabase
+                        .from('profiles')
+                        .update({ wallet_balance: newBalance })
+                        .eq('id', currentUser.id);
+
+                    if (updateError) {
+                        console.error('Error updating wallet balance:', updateError);
+                        return;
+                    }
+
+                    // Record transaction
+                    const { error: transactionError } = await supabase
+                        .from('transactions')
+                        .insert([
+                            { 
+                                user_id: currentUser.id,
+                                amount: entryFee,
+                                type: 'debit',
+                                description: `Tournament entry: ${e.target.parentElement.querySelector('h3').textContent}`,
+                                status: 'completed'
+                            }
+                        ]);
+
+                    if (transactionError) {
+                        console.error('Error recording transaction:', transactionError);
+                    }
+
+                    // Update UI
+                    walletAmount.textContent = `₹${newBalance}`;
+                    modalWalletAmount.textContent = `₹${newBalance}`;
+                    fetchTransactions();
+
+                    alert(`You have successfully joined the tournament! Entry fee of ₹${entryFee} has been deducted from your wallet.`);
+                });
+            });
         }
 
-        function logout() {
-            localStorage.removeItem('proWarUser');
-            currentUser = null;
-            
-            document.getElementById('authSection').classList.remove('hidden');
-            document.getElementById('dashboardSection').classList.add('hidden');
-            
-            // Clear forms
-            document.getElementById('loginFormElement').reset();
-            document.getElementById('signupFormElement').reset();
-            showLoginForm();
-            
-            // Stop banner slider
-            if (slideInterval) {
-                clearInterval(slideInterval);
+        async function fetchTransactions() {
+            const { data, error } = await supabase
+                .from('transactions')
+                .select('*')
+                .eq('user_id', currentUser.id)
+                .order('created_at', { ascending: false })
+                .limit(10);
+
+            if (error) {
+                console.error('Error fetching transactions:', error);
+                return;
             }
+
+            transactionsList.innerHTML = '';
+            data.forEach(transaction => {
+                const item = document.createElement('div');
+                item.className = 'transaction-item';
+                item.innerHTML = `
+                    <div>
+                        <div>${transaction.description}</div>
+                        <div style="font-size: 0.8rem; color: #aaa;">${new Date(transaction.created_at).toLocaleString()}</div>
+                    </div>
+                    <div class="transaction-amount ${transaction.type === 'credit' ? 'credit' : 'debit'}">
+                        ${transaction.type === 'credit' ? '+' : '-'}₹${transaction.amount}
+                    </div>
+                `;
+                transactionsList.appendChild(item);
+            });
+        }
+
+        function openGame(title, url) {
+            currentGameTitle.textContent = title;
+            gameFrame.src = url;
+            gameModal.style.display = 'flex';
         }
     </script>
 </body>

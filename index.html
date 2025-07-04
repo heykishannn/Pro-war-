@@ -39,7 +39,7 @@
             border: 1px solid var(--glass-border);
         }
 
-        /* Splash Screen - UPDATED */
+        /* Splash Screen - UPDATED WITH NEON and LOADER */
         #splash-screen {
             position: fixed;
             top: 0;
@@ -52,10 +52,10 @@
             justify-content: center;
             align-items: center;
             z-index: 9999;
-            animation: fadeOut 0.5s ease-in-out 2.5s forwards; /* Fades out after 2.5s */
+            animation: fadeOutSplashScreen 0.5s ease-in-out 2.5s forwards;
         }
-
-        @keyframes fadeOut {
+        
+        @keyframes fadeOutSplashScreen {
             to { opacity: 0; visibility: hidden; }
         }
 
@@ -66,24 +66,34 @@
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); /* Removed glow, added subtle shadow */
-            animation: logo-intro 1.5s ease-out forwards; /* New intro animation */
+            animation: neon-glow 2s ease-in-out infinite alternate;
         }
 
-        @keyframes logo-intro {
-            0% {
-                transform: scale(0.8);
-                opacity: 0;
+        @keyframes neon-glow {
+            from {
+                text-shadow: 0 0 5px #fff, 0 0 10px var(--gold), 0 0 15px var(--gold), 0 0 20px var(--gold);
             }
-            60% {
-                transform: scale(1.1);
-                opacity: 1;
-            }
-            100% {
-                transform: scale(1);
-                opacity: 1;
+            to {
+                text-shadow: 0 0 10px #fff, 0 0 20px var(--dark-gold), 0 0 30px var(--dark-gold), 0 0 40px var(--dark-gold);
             }
         }
+        
+        .loader {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(255, 215, 0, 0.2);
+            border-top-color: var(--gold);
+            border-radius: 50%;
+            margin-top: 2rem;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
 
         /* Auth Screens */
         .auth-container {
@@ -567,6 +577,7 @@
     <!-- Splash Screen -->
     <div id="splash-screen">
         <div class="logo">PRO WAR</div>
+        <div class="loader"></div>
     </div>
 
     <!-- Auth Screens -->
@@ -757,7 +768,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script>
-        // Initialize Supabase
+        // Initialize Supabase -- USING YOUR ORIGINAL CREDENTIALS
         const supabaseUrl = 'https://udzedfjohdvdbuqszpsb.supabase.co';
         const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVkemVkZmpvaGR2ZGJ1cXN6cHNiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE1MTk4OTYsImV4cCI6MjA2NzA5NTg5Nn0.XXqF4YUS_56lxv7CesmlnfdXeEUZp1bp1y1EKpQY7q8';
         const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
@@ -883,7 +894,6 @@
             await fetchUserProfile();
         });
 
-        // UPDATED SIGNUP FORM EVENT LISTENER
         signupForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const email = document.getElementById('signup-email').value;
@@ -916,6 +926,8 @@
             if (insertError) {
                 signupError.style.color = '#ff6b6b'; // Red for error
                 signupError.textContent = insertError.message;
+                // Important: If profile creation fails, we should handle this, maybe delete the auth user.
+                // For now, we just show the error.
                 return;
             }
 
@@ -1138,11 +1150,7 @@
                 alert('Insufficient balance for withdrawal');
                 return;
             }
-
-            // In a real app, you would call Cashfree Payout API here
-            // For demo, we'll simulate a successful withdrawal
             
-            // Deduct from wallet
             const newBalance = userData.wallet_balance - amount;
 
             const { error: updateError } = await supabase
@@ -1164,7 +1172,7 @@
                         amount: amount,
                         type: 'debit',
                         description: `Withdrawal to ${upi}`,
-                        status: 'pending' // Would be 'completed' after Cashfree processes it
+                        status: 'pending' 
                     }
                 ]);
 
@@ -1211,12 +1219,11 @@
                 .eq('id', currentUser.id)
                 .single();
 
+            // IMPROVED ERROR HANDLING
             if (error) {
-                console.error('Error fetching profile:', error);
-                // This could happen if a user signs up but the profile creation fails.
-                // We should probably log them out or show an error.
-                // For now, we'll just log it and prevent the app from loading.
-                supabase.auth.signOut();
+                console.error('Error fetching profile:', error.message);
+                alert("Could not fetch your profile. You may be logged out. Please try logging in again.");
+                await supabase.auth.signOut();
                 showAuthScreen();
                 return;
             }
@@ -1236,8 +1243,6 @@
             forgotContainer.style.display = 'none';
             appContainer.style.display = 'block';
 
-            // For demo, we're just showing user.html regardless of role
-            // In a real app, you would redirect to owner.html or admin.html if those roles are true
             fetchTournaments();
         }
 
@@ -1280,7 +1285,6 @@
                     const tournamentId = e.target.dataset.id;
                     const entryFee = parseInt(e.target.dataset.fee);
                     
-                    // Check if user has sufficient balance
                     const { data: userData, error: userError } = await supabase
                         .from('profiles')
                         .select('wallet_balance')
@@ -1298,7 +1302,6 @@
                         return;
                     }
 
-                    // Deduct entry fee
                     const newBalance = userData.wallet_balance - entryFee;
 
                     const { error: updateError } = await supabase
@@ -1311,7 +1314,6 @@
                         return;
                     }
 
-                    // Record transaction
                     const { error: transactionError } = await supabase
                         .from('transactions')
                         .insert([

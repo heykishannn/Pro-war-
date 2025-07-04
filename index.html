@@ -873,41 +873,41 @@
             await fetchUserProfile();
         });
 
-        signupForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const email = document.getElementById('signup-email').value;
-            const password = document.getElementById('signup-password').value;
-            const username = document.getElementById('signup-username').value;
-            
-            // First sign up with email and password
-            const { data: authData, error: authError } = await supabase.auth.signUp({
-                email,
-                password
-            });
+    signupForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = document.getElementById('signup-email').value;
+    const password = document.getElementById('signup-password').value;
+    const username = document.getElementById('signup-username').value;
+    
+    const { data: authData, error: authError } = await supabase.auth.signUp({
+        email,
+        password
+    });
 
-            if (authError) {
-                signupError.textContent = authError.message;
-                return;
-            }
+    if (authError) {
+        signupError.textContent = authError.message;
+        return;
+    }
 
-            // Then create a profile in the profiles table
-            const { data: profileData, error: profileError } = await supabase
-                .from('profiles')
-                .insert([
-                    { 
-                        id: authData.user.id, 
-                        username,
-                        wallet_balance: 0,
-                        is_owner: false,
-                        is_admin: false
-                    }
-                ])
-                .select();
+    // 🔥 Insert into 'profiles' table (Add this block below)
+    const { user } = authData;
+    const { error: insertError } = await supabase.from("profiles").insert({
+        id: user.id,
+        username: username,
+        email: email, // ✅ VERY IMPORTANT
+        is_admin: false,
+        is_owner: false,
+        wallet_balance: 0
+    });
 
-            if (profileError) {
-                signupError.textContent = profileError.message;
-                return;
-            }
+    if (insertError) {
+        signupError.textContent = insertError.message;
+        return;
+    }
+
+    // Optional: Show success message or redirect
+    signupError.textContent = "Signup successful! Please check your email to verify.";
+});
 
             // Show success message and redirect to login
             signupError.textContent = '';

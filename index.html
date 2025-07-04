@@ -1,236 +1,1182 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Pro War - User Panel</title>
-  <style>
-    /* 🌟 Golden Theme + Glassmorphism */
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(135deg, #1a1a1a, #000000);
-      color: #fff;
-      overflow-x: hidden;
-    }
-    .glass {
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 16px;
-      backdrop-filter: blur(15px);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      box-shadow: 0 4px 30px rgba(255, 215, 0, 0.2);
-    }
-    .gold {
-      color: #FFD700;
-    }
-    .btn {
-      padding: 10px 20px;
-      background: #FFD700;
-      color: #000;
-      border: none;
-      border-radius: 10px;
-      font-weight: bold;
-      cursor: pointer;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pro War - Real Money Gaming</title>
+    <meta name="description" content="Pro War - The ultimate real money gaming platform with tournaments, mini-games, and instant payouts. Join the battle and win big!">
+    <meta property="og:title" content="Pro War - Real Money Gaming">
+    <meta property="og:description" content="The ultimate real money gaming platform with tournaments, mini-games, and instant payouts.">
+    <meta property="og:type" content="website">
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&family=Orbitron:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --golden: #FFD700;
+            --golden-dark: #FFA500;
+            --coral: #FF6B35;
+            --glass-light: rgba(255, 255, 255, 0.1);
+            --glass-dark: rgba(0, 0, 0, 0.3);
+        }
 
-    /* Splash screen */
-    #splash {
-      position: fixed;
-      inset: 0;
-      background: linear-gradient(135deg, #000, #FFD700);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 9999;
-      animation: fadeOut 1s ease-in-out 2s forwards;
-    }
-    #splash h1 {
-      font-size: 3em;
-      color: white;
-      text-shadow: 0 0 20px #FFD700;
-    }
-    @keyframes fadeOut {
-      to { opacity: 0; visibility: hidden; }
-    }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    /* Layout */
-    .container { padding: 20px; max-width: 800px; margin: auto; }
-    .banner { margin-bottom: 20px; }
-    .tournament-card, .wallet, .auth-form, .game-card {
-      margin-bottom: 20px;
-      padding: 15px;
-    }
-    .tournament-card, .wallet, .game-card {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            color: white;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
 
-    input {
-      padding: 10px;
-      border-radius: 10px;
-      border: none;
-      width: 100%;
-      margin-bottom: 10px;
-    }
+        .glass-morphism {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
 
-    iframe {
-      width: 100%;
-      height: 400px;
-      border: none;
-      border-radius: 20px;
-      overflow: hidden;
-    }
+        .glass-morphism-dark {
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+        }
 
-    #games iframe {
-      margin-top: 20px;
-    }
+        .golden-gradient {
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 50%, #FF6B35 100%);
+        }
 
-    .hidden { display: none; }
+        .golden-gradient-radial {
+            background: radial-gradient(circle at center, #FFD700 0%, #FFA500 50%, #FF6B35 100%);
+        }
 
-  </style>
+        .neon-glow {
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.5), 0 0 20px rgba(255, 215, 0, 0.3), 0 0 30px rgba(255, 215, 0, 0.1);
+        }
+
+        .neon-glow-hover:hover {
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.7), 0 0 25px rgba(255, 215, 0, 0.5), 0 0 35px rgba(255, 215, 0, 0.3);
+        }
+
+        .tournament-card {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.1) 0%, rgba(255, 165, 0, 0.05) 100%);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .tournament-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.2);
+            border-color: rgba(255, 215, 0, 0.5);
+        }
+
+        .game-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 215, 0, 0.1) 100%);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .game-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 40px rgba(255, 215, 0, 0.3);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            color: #000;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #FFA500 0%, #FF6B35 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            color: #FFD700;
+            transition: all 0.3s ease;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 215, 0, 0.1);
+            border-color: rgba(255, 215, 0, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .input-field {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            transition: all 0.3s ease;
+            padding: 12px 16px;
+            border-radius: 8px;
+            width: 100%;
+            outline: none;
+        }
+
+        .input-field:focus {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 215, 0, 0.5);
+            box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.1);
+        }
+
+        .input-field::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .loading-spinner {
+            border: 3px solid rgba(255, 215, 0, 0.3);
+            border-top: 3px solid #FFD700;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .success-message {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(16, 185, 129, 0.1) 100%);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: #10B981;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+        }
+
+        .error-message {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.2) 0%, rgba(239, 68, 68, 0.1) 100%);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #EF4444;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+        }
+
+        .splash-logo {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #FFD700;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+            animation: glow 2s ease-in-out infinite alternate;
+            font-family: 'Orbitron', monospace;
+        }
+
+        @keyframes glow {
+            0% { text-shadow: 0 0 5px #FFD700, 0 0 10px #FFD700, 0 0 15px #FFD700; }
+            100% { text-shadow: 0 0 10px #FFD700, 0 0 20px #FFD700, 0 0 30px #FFD700; }
+        }
+
+        @keyframes bounce-in {
+            0% { transform: scale(0.3); opacity: 0; }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        @keyframes fade-in {
+            0% { opacity: 0; transform: translateY(10px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-bounce-in {
+            animation: bounce-in 0.6s ease-out;
+        }
+
+        .animate-fade-in {
+            animation: fade-in 0.3s ease-out;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .modal-overlay {
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 215, 0, 0.05) 100%);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            padding: 24px;
+            max-width: 500px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .slide-container {
+            overflow: hidden;
+            position: relative;
+            border-radius: 16px;
+        }
+
+        .slide-wrapper {
+            display: flex;
+            transition: transform 0.5s ease;
+        }
+
+        .slide {
+            min-width: 100%;
+            flex-shrink: 0;
+        }
+
+        .banner-slide {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.2) 0%, rgba(255, 107, 53, 0.1) 100%);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            padding: 24px;
+            height: 160px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .banner-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .banner-indicator.active {
+            background: #FFD700;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+
+        .balance-display {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(255, 215, 0, 0.1) 100%);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: #10B981;
+            font-weight: 600;
+            font-size: 1.2rem;
+            padding: 8px 16px;
+            border-radius: 24px;
+        }
+
+        .prize-badge {
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            color: #000;
+            font-weight: 600;
+            font-size: 0.9rem;
+            padding: 4px 8px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(255, 215, 0, 0.3);
+        }
+
+        .entry-fee {
+            background: rgba(255, 107, 53, 0.2);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 107, 53, 0.3);
+            color: #FF6B35;
+            font-weight: 500;
+            padding: 4px 8px;
+            border-radius: 8px;
+        }
+
+        .game-icon {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.2) 0%, rgba(255, 215, 0, 0.1) 100%);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            color: #FFD700;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .game-icon:hover {
+            transform: scale(1.1);
+            box-shadow: 0 5px 20px rgba(255, 215, 0, 0.4);
+        }
+
+        .particles-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: #FFD700;
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+
+        /* Utility classes */
+        .flex { display: flex; }
+        .flex-col { flex-direction: column; }
+        .items-center { align-items: center; }
+        .justify-center { justify-content: center; }
+        .justify-between { justify-content: space-between; }
+        .space-x-2 > * + * { margin-left: 0.5rem; }
+        .space-x-4 > * + * { margin-left: 1rem; }
+        .space-y-4 > * + * { margin-top: 1rem; }
+        .space-y-6 > * + * { margin-top: 1.5rem; }
+        .p-4 { padding: 1rem; }
+        .p-6 { padding: 1.5rem; }
+        .px-4 { padding-left: 1rem; padding-right: 1rem; }
+        .py-3 { padding-top: 0.75rem; padding-bottom: 0.75rem; }
+        .mb-4 { margin-bottom: 1rem; }
+        .mb-6 { margin-bottom: 1.5rem; }
+        .mt-4 { margin-top: 1rem; }
+        .mt-6 { margin-top: 1.5rem; }
+        .text-center { text-align: center; }
+        .text-sm { font-size: 0.875rem; }
+        .text-lg { font-size: 1.125rem; }
+        .text-xl { font-size: 1.25rem; }
+        .text-2xl { font-size: 1.5rem; }
+        .text-3xl { font-size: 1.875rem; }
+        .font-bold { font-weight: 700; }
+        .font-semibold { font-weight: 600; }
+        .font-medium { font-weight: 500; }
+        .w-full { width: 100%; }
+        .w-10 { width: 2.5rem; }
+        .h-10 { height: 2.5rem; }
+        .min-h-screen { min-height: 100vh; }
+        .max-w-md { max-width: 28rem; }
+        .max-w-4xl { max-width: 56rem; }
+        .max-w-7xl { max-width: 80rem; }
+        .mx-auto { margin-left: auto; margin-right: auto; }
+        .rounded-lg { border-radius: 0.5rem; }
+        .rounded-xl { border-radius: 0.75rem; }
+        .rounded-2xl { border-radius: 1rem; }
+        .rounded-full { border-radius: 9999px; }
+        .border-b { border-bottom-width: 1px; }
+        .border-t { border-top-width: 1px; }
+        .border-gray-600 { border-color: rgb(75, 85, 99); }
+        .text-gray-300 { color: rgb(209, 213, 219); }
+        .text-gray-400 { color: rgb(156, 163, 175); }
+        .text-green-400 { color: rgb(74, 222, 128); }
+        .text-red-400 { color: rgb(248, 113, 113); }
+        .text-yellow-400 { color: rgb(250, 204, 21); }
+        .text-golden { color: #FFD700; }
+        .bg-gray-800 { background-color: rgb(31, 41, 55); }
+        .bg-gray-900 { background-color: rgb(17, 24, 39); }
+        .bg-yellow-900 { background-color: rgb(113, 63, 18); }
+        .relative { position: relative; }
+        .absolute { position: absolute; }
+        .fixed { position: fixed; }
+        .top-0 { top: 0; }
+        .right-0 { right: 0; }
+        .left-0 { left: 0; }
+        .bottom-0 { bottom: 0; }
+        .inset-0 { top: 0; right: 0; bottom: 0; left: 0; }
+        .z-50 { z-index: 50; }
+        .z-10 { z-index: 10; }
+        .grid { display: grid; }
+        .grid-cols-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+        .grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+        .gap-4 { gap: 1rem; }
+        .gap-6 { gap: 1.5rem; }
+
+        @media (max-width: 768px) {
+            .max-w-7xl { max-width: 100%; }
+            .px-4 { padding-left: 1rem; padding-right: 1rem; }
+            .grid-cols-2 { grid-template-columns: 1fr; }
+            .text-3xl { font-size: 1.5rem; }
+            .text-2xl { font-size: 1.25rem; }
+        }
+    </style>
 </head>
 <body>
+    <!-- Particle Background -->
+    <div class="particles-bg" id="particles"></div>
 
-  <!-- 🔥 Splash Screen -->
-  <div id="splash">
-    <h1 class="gold">Pro War</h1>
-  </div>
-
-  <div class="container" id="mainApp" class="hidden">
-
-    <!-- 🧑‍💼 Auth Section -->
-    <div id="authSection" class="glass auth-form">
-      <h2 class="gold">Login / Signup</h2>
-      <input id="email" type="email" placeholder="Email" />
-      <input id="password" type="password" placeholder="Password" />
-      <button class="btn" onclick="login()">Login</button>
-      <button class="btn" onclick="signup()">Signup</button>
-      <p><a href="#" onclick="forgotPassword()">Forgot Password?</a></p>
+    <!-- Splash Screen -->
+    <div id="splashScreen" class="fixed inset-0 z-50 flex items-center justify-center golden-gradient-radial">
+        <div class="text-center animate-bounce-in">
+            <div class="splash-logo mb-4">PRO WAR</div>
+            <div class="text-golden-dark text-lg mb-8">Real Money Gaming</div>
+            <div class="loading-spinner mx-auto"></div>
+        </div>
     </div>
 
-    <!-- 💰 Wallet -->
-    <div id="walletSection" class="glass wallet hidden">
-      <h3>Wallet: ₹<span id="walletBalance">0</span></h3>
-      <button class="btn" onclick="addMoney()">Add Money</button>
-      <button class="btn" onclick="logout()">Logout</button>
-    </div>
+    <!-- Main App Container -->
+    <div id="mainApp" class="hidden">
+        <!-- Auth Section -->
+        <div id="authSection" class="min-h-screen flex items-center justify-center p-4">
+            <div class="w-full max-w-md">
+                <!-- Login Form -->
+                <div id="loginForm" class="modal-content">
+                    <div class="text-center mb-6">
+                        <h1 class="text-3xl font-bold text-golden mb-2">PRO WAR</h1>
+                        <p class="text-gray-300">Enter the battlefield</p>
+                    </div>
+                    
+                    <div id="loginError" class="error-message hidden">
+                        <i class="fas fa-exclamation-triangle mr-2"></i>
+                        <span id="loginErrorText"></span>
+                    </div>
+                    
+                    <form id="loginFormElement" class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-2">Email</label>
+                            <input type="email" id="loginEmail" class="input-field" placeholder="Enter your email" required>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-2">Password</label>
+                            <input type="password" id="loginPassword" class="input-field" placeholder="Enter your password" required>
+                        </div>
+                        
+                        <div id="forgotPasswordLink" class="text-center hidden">
+                            <a href="#" onclick="showForgotPassword()" class="text-golden text-sm hover:underline">Forgot Password?</a>
+                        </div>
+                        
+                        <button type="submit" class="btn-primary w-full neon-glow-hover">
+                            <span id="loginButtonText">Login</span>
+                            <div id="loginLoading" class="loading-spinner ml-2 hidden" style="display: inline-block;"></div>
+                        </button>
+                    </form>
+                    
+                    <div class="text-center mt-6">
+                        <span class="text-gray-400">Don't have an account? </span>
+                        <a href="#" onclick="showSignupForm()" class="text-golden hover:underline">Sign Up</a>
+                    </div>
+                </div>
 
-    <!-- 🏆 Tournament Section -->
-    <div id="tournaments" class="glass banner hidden">
-      <h3 class="gold">Tournaments</h3>
-      <div id="tournamentList"></div>
-    </div>
+                <!-- Signup Form -->
+                <div id="signupForm" class="modal-content hidden">
+                    <div class="text-center mb-6">
+                        <h1 class="text-3xl font-bold text-golden mb-2">JOIN PRO WAR</h1>
+                        <p class="text-gray-300">Create your account</p>
+                    </div>
+                    
+                    <div id="signupError" class="error-message hidden">
+                        <i class="fas fa-exclamation-triangle mr-2"></i>
+                        <span id="signupErrorText"></span>
+                    </div>
+                    
+                    <form id="signupFormElement" class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-2">Username</label>
+                            <input type="text" id="signupUsername" class="input-field" placeholder="Choose a username" required minlength="3">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-2">Email</label>
+                            <input type="email" id="signupEmail" class="input-field" placeholder="Enter your email" required>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-2">Password</label>
+                            <input type="password" id="signupPassword" class="input-field" placeholder="Create a password" required minlength="6">
+                        </div>
+                        
+                        <button type="submit" class="btn-primary w-full neon-glow-hover">
+                            <span id="signupButtonText">Create Account</span>
+                            <div id="signupLoading" class="loading-spinner ml-2 hidden" style="display: inline-block;"></div>
+                        </button>
+                    </form>
+                    
+                    <div class="text-center mt-6">
+                        <span class="text-gray-400">Already have an account? </span>
+                        <a href="#" onclick="showLoginForm()" class="text-golden hover:underline">Login</a>
+                    </div>
+                </div>
 
-    <!-- 🎮 Games -->
-    <div id="games" class="hidden">
-      <div class="glass game-card">
-        <h4 class="gold">Ludo</h4>
-        <button class="btn" onclick="loadGame('ludo')">Play</button>
-      </div>
-      <div class="glass game-card">
-        <h4 class="gold">Mines</h4>
-        <button class="btn" onclick="loadGame('mines')">Play</button>
-      </div>
-      <iframe id="gameFrame" class="hidden"></iframe>
-    </div>
-  </div>
-
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
-  <script>
-    const supabase = window.supabase.createClient('https://YOUR_PROJECT.supabase.co', 'YOUR_PUBLIC_ANON_KEY');
-
-    const authSection = document.getElementById("authSection");
-    const walletSection = document.getElementById("walletSection");
-    const tournaments = document.getElementById("tournaments");
-    const tournamentList = document.getElementById("tournamentList");
-    const games = document.getElementById("games");
-    const gameFrame = document.getElementById("gameFrame");
-
-    setTimeout(() => {
-      document.getElementById("splash").style.display = "none";
-      document.getElementById("mainApp").style.display = "block";
-      checkSession();
-    }, 2500);
-
-    async function checkSession() {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session) {
-        loadProfile(session.user);
-      }
-    }
-
-    async function login() {
-      const email = document.getElementById("email").value;
-      const password = document.getElementById("password").value;
-      const { error, data } = await supabase.auth.signInWithPassword({ email, password });
-      if (error) return alert(error.message);
-      const user = data.user;
-      loadProfile(user);
-    }
-
-    async function signup() {
-      const email = document.getElementById("email").value;
-      const password = document.getElementById("password").value;
-      const { error, data } = await supabase.auth.signUp({ email, password });
-      if (error) return alert(error.message);
-      await supabase.from("profiles").insert([{ id: data.user.id, username: email.split('@')[0], wallet_balance: 0 }]);
-      alert("Signup successful, now login.");
-    }
-
-    async function forgotPassword() {
-      const email = prompt("Enter your email:");
-      const { error } = await supabase.auth.resetPasswordForEmail(email);
-      if (error) return alert(error.message);
-      alert("Password reset link sent.");
-    }
-
-    async function logout() {
-      await supabase.auth.signOut();
-      location.reload();
-    }
-
-    async function loadProfile(user) {
-      const { data, error } = await supabase.from("profiles").select("*").eq("id", user.id).single();
-      if (data.is_admin) return location.href = "admin.html";
-      if (data.is_owner) return location.href = "owner.html";
-      authSection.classList.add("hidden");
-      walletSection.classList.remove("hidden");
-      tournaments.classList.remove("hidden");
-      games.classList.remove("hidden");
-      document.getElementById("walletBalance").innerText = data.wallet_balance;
-      loadTournaments();
-    }
-
-    async function loadTournaments() {
-      const { data, error } = await supabase.from("tournaments").select("*");
-      if (data) {
-        tournamentList.innerHTML = "";
-        data.forEach(t => {
-          tournamentList.innerHTML += `
-            <div class="glass tournament-card">
-              <div>
-                <h4>${t.title}</h4>
-                <p>Entry: ₹${t.entry_fee} | Prize: ₹${t.prize}</p>
-              </div>
-              <button class="btn">Join</button>
+                <!-- Forgot Password Form -->
+                <div id="forgotPasswordForm" class="modal-content hidden">
+                    <div class="text-center mb-6">
+                        <h1 class="text-3xl font-bold text-golden mb-2">RESET PASSWORD</h1>
+                        <p class="text-gray-300">Enter your email to reset password</p>
+                    </div>
+                    
+                    <div id="forgotError" class="error-message hidden">
+                        <i class="fas fa-exclamation-triangle mr-2"></i>
+                        <span id="forgotErrorText"></span>
+                    </div>
+                    
+                    <form id="forgotPasswordFormElement" class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-2">Email</label>
+                            <input type="email" id="forgotEmail" class="input-field" placeholder="Enter your email" required>
+                        </div>
+                        
+                        <button type="submit" class="btn-primary w-full neon-glow-hover">
+                            <span id="forgotButtonText">Send Reset Link</span>
+                            <div id="forgotLoading" class="loading-spinner ml-2 hidden" style="display: inline-block;"></div>
+                        </button>
+                    </form>
+                    
+                    <div class="text-center mt-6">
+                        <a href="#" onclick="showLoginForm()" class="text-golden hover:underline">Back to Login</a>
+                    </div>
+                </div>
             </div>
-          `;
+        </div>
+        
+        <!-- Dashboard Section -->
+        <div id="dashboardSection" class="hidden min-h-screen">
+            <!-- Header -->
+            <div class="glass-morphism border-b border-gray-600 sticky top-0 z-10">
+                <div class="max-w-7xl mx-auto px-4 py-3">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-4">
+                            <h1 class="text-2xl font-bold text-golden">PRO WAR</h1>
+                            <span class="text-sm text-gray-400">Welcome back, <span id="userNameDisplay"></span></span>
+                        </div>
+                        
+                        <div class="flex items-center space-x-4">
+                            <div class="balance-display" id="userBalance">₹0</div>
+                            <button onclick="showAddMoneyModal()" class="btn-primary">
+                                <i class="fas fa-plus mr-2"></i>Add Money
+                            </button>
+                            <button onclick="logout()" class="btn-secondary">
+                                <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Main Content -->
+            <div class="max-w-7xl mx-auto px-4 py-6 space-y-6">
+                <!-- Sliding Banner -->
+                <div class="slide-container">
+                    <div class="slide-wrapper" id="bannerSlider">
+                        <div class="slide">
+                            <div class="banner-slide">
+                                <div>
+                                    <h2 class="text-2xl font-bold text-golden mb-2">Welcome to Pro War!</h2>
+                                    <p class="text-gray-300">Join tournaments and win big prizes</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="slide">
+                            <div class="banner-slide">
+                                <div>
+                                    <h2 class="text-2xl font-bold text-golden mb-2">Mega Tournament Live!</h2>
+                                    <p class="text-gray-300">₹10,000 prize pool - Join now!</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="slide">
+                            <div class="banner-slide">
+                                <div>
+                                    <h2 class="text-2xl font-bold text-golden mb-2">New Games Added!</h2>
+                                    <p class="text-gray-300">Try Ludo and Mines for instant wins</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex justify-center mt-4 space-x-2">
+                        <div class="banner-indicator active" onclick="goToSlide(0)"></div>
+                        <div class="banner-indicator" onclick="goToSlide(1)"></div>
+                        <div class="banner-indicator" onclick="goToSlide(2)"></div>
+                    </div>
+                </div>
+                
+                <!-- Tournaments Section -->
+                <div>
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-2xl font-bold text-golden">Live Tournaments</h2>
+                        <button class="btn-secondary" onclick="refreshTournaments()">
+                            <i class="fas fa-refresh mr-2"></i>Refresh
+                        </button>
+                    </div>
+                    
+                    <div id="tournamentsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- Tournament cards will be loaded here -->
+                    </div>
+                </div>
+                
+                <!-- Mini Games Section -->
+                <div>
+                    <h2 class="text-2xl font-bold text-golden mb-6">Mini Games</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="game-card p-6 rounded-xl cursor-pointer" onclick="playGame('ludo')">
+                            <div class="flex items-center space-x-4">
+                                <div class="game-icon">
+                                    <i class="fas fa-dice"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-xl font-bold text-golden">Ludo Master</h3>
+                                    <p class="text-gray-300">Classic board game with real money prizes</p>
+                                    <div class="mt-2">
+                                        <span class="prize-badge">Win up to ₹1000</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="game-card p-6 rounded-xl cursor-pointer" onclick="playGame('mines')">
+                            <div class="flex items-center space-x-4">
+                                <div class="game-icon">
+                                    <i class="fas fa-bomb"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-xl font-bold text-golden">Mines</h3>
+                                    <p class="text-gray-300">Find gems, avoid mines, win instant cash</p>
+                                    <div class="mt-2">
+                                        <span class="prize-badge">Instant Payouts</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Money Modal -->
+    <div id="addMoneyModal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-2xl font-bold text-golden">Add Money</h3>
+                <button onclick="hideAddMoneyModal()" class="text-gray-400 hover:text-white">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            
+            <div id="addMoneyError" class="error-message hidden">
+                <i class="fas fa-exclamation-triangle mr-2"></i>
+                <span id="addMoneyErrorText"></span>
+            </div>
+            
+            <form id="addMoneyForm" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Amount (₹)</label>
+                    <input type="number" id="addMoneyAmount" class="input-field" placeholder="Enter amount" min="10" max="50000" required>
+                </div>
+                
+                <div class="grid grid-cols-3 gap-2 mb-4">
+                    <button type="button" onclick="setAddAmount(100)" class="btn-secondary">₹100</button>
+                    <button type="button" onclick="setAddAmount(500)" class="btn-secondary">₹500</button>
+                    <button type="button" onclick="setAddAmount(1000)" class="btn-secondary">₹1000</button>
+                </div>
+                
+                <button type="submit" class="btn-primary w-full neon-glow-hover">
+                    <i class="fas fa-credit-card mr-2"></i>
+                    <span id="addMoneyButtonText">Pay with Razorpay</span>
+                    <div id="addMoneyLoading" class="loading-spinner ml-2 hidden" style="display: inline-block;"></div>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Game Modal -->
+    <div id="gameModal" class="modal-overlay hidden">
+        <div class="modal-content" style="max-width: 90vw; max-height: 90vh;">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-2xl font-bold text-golden" id="gameTitle">Game</h3>
+                <button onclick="hideGameModal()" class="text-gray-400 hover:text-white">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            <iframe id="gameFrame" src="" width="100%" height="600" frameborder="0" class="rounded-lg"></iframe>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let currentUser = null;
+        let currentSlide = 0;
+        let slideInterval = null;
+        let loginAttempts = 0;
+        const maxLoginAttempts = 3;
+
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeParticles();
+            setTimeout(showMainApp, 2500);
+            
+            // Initialize banner slider
+            setTimeout(() => {
+                if (document.getElementById('dashboardSection').classList.contains('hidden')) return;
+                startBannerSlider();
+            }, 3000);
         });
-      }
-    }
 
-    function addMoney() {
-      alert("💰 Razorpay Checkout would open here.");
-      // Razorpay JS logic can be plugged here
-    }
+        // Particle background
+        function initializeParticles() {
+            const particlesContainer = document.getElementById('particles');
+            for (let i = 0; i < 50; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 6 + 's';
+                particlesContainer.appendChild(particle);
+            }
+        }
 
-    function loadGame(game) {
-      gameFrame.classList.remove("hidden");
-      if (game === "ludo") gameFrame.src = "games/ludo/index.html";
-      if (game === "mines") gameFrame.src = "games/mines/index.html";
-    }
-  </script>
+        // Show main app after splash
+        function showMainApp() {
+            document.getElementById('splashScreen').classList.add('hidden');
+            document.getElementById('mainApp').classList.remove('hidden');
+            
+            // Check if user is already logged in
+            const savedUser = localStorage.getItem('proWarUser');
+            if (savedUser) {
+                currentUser = JSON.parse(savedUser);
+                showDashboard();
+            }
+        }
+
+        // Auth functions
+        function showSignupForm() {
+            document.getElementById('loginForm').classList.add('hidden');
+            document.getElementById('signupForm').classList.remove('hidden');
+            document.getElementById('forgotPasswordForm').classList.add('hidden');
+        }
+
+        function showLoginForm() {
+            document.getElementById('loginForm').classList.remove('hidden');
+            document.getElementById('signupForm').classList.add('hidden');
+            document.getElementById('forgotPasswordForm').classList.add('hidden');
+        }
+
+        function showForgotPassword() {
+            document.getElementById('loginForm').classList.add('hidden');
+            document.getElementById('signupForm').classList.add('hidden');
+            document.getElementById('forgotPasswordForm').classList.remove('hidden');
+        }
+
+        // Login form handler
+        document.getElementById('loginFormElement').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            setLoading('login', true);
+            hideError('login');
+            
+            try {
+                const response = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    currentUser = data.user;
+                    localStorage.setItem('proWarUser', JSON.stringify(currentUser));
+                    
+                    // Redirect based on user role
+                    if (currentUser.is_owner) {
+                        window.location.href = '/owner.html';
+                    } else if (currentUser.is_admin) {
+                        window.location.href = '/admin.html';
+                    } else {
+                        showDashboard();
+                    }
+                    
+                    loginAttempts = 0; // Reset attempts on successful login
+                } else {
+                    loginAttempts++;
+                    if (loginAttempts >= maxLoginAttempts) {
+                        document.getElementById('forgotPasswordLink').classList.remove('hidden');
+                    }
+                    showError('login', data.message);
+                }
+            } catch (error) {
+                showError('login', 'Network error. Please try again.');
+            }
+            
+            setLoading('login', false);
+        });
+
+        // Signup form handler
+        document.getElementById('signupFormElement').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('signupUsername').value;
+            const email = document.getElementById('signupEmail').value;
+            const password = document.getElementById('signupPassword').value;
+            
+            setLoading('signup', true);
+            hideError('signup');
+            
+            try {
+                const response = await fetch('/api/auth/signup', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, email, password })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showSuccess('signup', 'Account created successfully! Please login.');
+                    setTimeout(() => showLoginForm(), 2000);
+                } else {
+                    showError('signup', data.message);
+                }
+            } catch (error) {
+                showError('signup', 'Network error. Please try again.');
+            }
+            
+            setLoading('signup', false);
+        });
+
+        // Forgot password form handler
+        document.getElementById('forgotPasswordFormElement').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('forgotEmail').value;
+            
+            setLoading('forgot', true);
+            hideError('forgot');
+            
+            // Simulate forgot password (since not implemented in backend)
+            setTimeout(() => {
+                showSuccess('forgot', 'Password reset link sent to your email!');
+                setTimeout(() => showLoginForm(), 2000);
+                setLoading('forgot', false);
+            }, 1000);
+        });
+
+        // Show dashboard
+        function showDashboard() {
+            document.getElementById('authSection').classList.add('hidden');
+            document.getElementById('dashboardSection').classList.remove('hidden');
+            
+            // Update user info
+            document.getElementById('userNameDisplay').textContent = currentUser.username;
+            document.getElementById('userBalance').textContent = `₹${currentUser.wallet_balance}`;
+            
+            // Load tournaments
+            loadTournaments();
+            startBannerSlider();
+        }
+
+        // Banner slider functions
+        function startBannerSlider() {
+            slideInterval = setInterval(() => {
+                currentSlide = (currentSlide + 1) % 3;
+                goToSlide(currentSlide);
+            }, 4000);
+        }
+
+        function goToSlide(index) {
+            currentSlide = index;
+            const slider = document.getElementById('bannerSlider');
+            slider.style.transform = `translateX(-${index * 100}%)`;
+            
+            // Update indicators
+            document.querySelectorAll('.banner-indicator').forEach((indicator, i) => {
+                indicator.classList.toggle('active', i === index);
+            });
+        }
+
+        // Load tournaments
+        async function loadTournaments() {
+            try {
+                const response = await fetch('/api/tournaments');
+                const tournaments = await response.json();
+                
+                const container = document.getElementById('tournamentsContainer');
+                container.innerHTML = '';
+                
+                if (tournaments.length === 0) {
+                    container.innerHTML = `
+                        <div class="col-span-full text-center py-12">
+                            <i class="fas fa-trophy text-6xl text-gray-600 mb-4"></i>
+                            <h3 class="text-xl font-semibold text-gray-300 mb-2">No tournaments available</h3>
+                            <p class="text-gray-400">Check back later for new tournaments!</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                tournaments.forEach(tournament => {
+                    const card = createTournamentCard(tournament);
+                    container.appendChild(card);
+                });
+            } catch (error) {
+                console.error('Error loading tournaments:', error);
+            }
+        }
+
+        function createTournamentCard(tournament) {
+            const card = document.createElement('div');
+            card.className = 'tournament-card p-6 rounded-xl';
+            
+            card.innerHTML = `
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-xl font-bold text-golden">${tournament.title}</h3>
+                    <span class="prize-badge">₹${tournament.prize_pool}</span>
+                </div>
+                <div class="space-y-2 mb-4">
+                    <div class="flex justify-between">
+                        <span class="text-gray-300">Game:</span>
+                        <span class="text-white">${tournament.game}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-300">Entry Fee:</span>
+                        <span class="entry-fee">₹${tournament.entry_fee}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-300">Players:</span>
+                        <span class="text-white">${tournament.current_players}/${tournament.max_players}</span>
+                    </div>
+                </div>
+                <button onclick="joinTournament(${tournament.id})" class="btn-primary w-full neon-glow-hover">
+                    <i class="fas fa-play mr-2"></i>Join Tournament
+                </button>
+            `;
+            
+            return card;
+        }
+
+        async function joinTournament(tournamentId) {
+            if (!currentUser) {
+                showError('general', 'Please login to join tournaments');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`/api/tournaments/${tournamentId}/join`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ userId: currentUser.id })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showSuccess('general', 'Successfully joined tournament!');
+                    loadTournaments(); // Refresh tournaments
+                } else {
+                    showError('general', data.message);
+                }
+            } catch (error) {
+                showError('general', 'Error joining tournament. Please try again.');
+            }
+        }
+
+        function refreshTournaments() {
+            loadTournaments();
+        }
+
+        // Add money modal functions
+        function showAddMoneyModal() {
+            document.getElementById('addMoneyModal').classList.remove('hidden');
+        }
+
+        function hideAddMoneyModal() {
+            document.getElementById('addMoneyModal').classList.add('hidden');
+            document.getElementById('addMoneyForm').reset();
+            hideError('addMoney');
+        }
+
+        function setAddAmount(amount) {
+            document.getElementById('addMoneyAmount').value = amount;
+        }
+
+        // Add money form handler
+        document.getElementById('addMoneyForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const amount = parseFloat(document.getElementById('addMoneyAmount').value);
+            
+            if (amount < 10 || amount > 50000) {
+                showError('addMoney', 'Amount must be between ₹10 and ₹50,000');
+                return;
+            }
+            
+            // Initialize Razorpay payment
+            const options = {
+                key: 'your_razorpay_key_here', // Replace with actual key
+                amount: amount * 100, // Amount in paise
+                currency: 'INR',
+                name: 'Pro War',
+                description: 'Add money to wallet',
+                image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiByeD0iOCIgZmlsbD0iI0ZGRDcwMCIvPgo8dGV4dCB4PSIyMCIgeT0iMjYiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxOCIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IiMwMDAiIHRleHQtYW5jaG9yPSJtaWRkbGUiPlA8L3RleHQ+Cjwvc3ZnPgo=',
+                handler: function(response) {
+                    processPayment(response.razorpay_payment_id, amount);
+                },
+                prefill: {
+                    email: currentUser.email,
+                    contact: ''
+                },
+                theme: {
+                    color: '#FFD700'
+                }
+            };
+            
+            const rzp = new Razorpay(options);
+            rzp.open();
+        });
+
+        async function processPayment(paymentId, amount) {
+            setLoading('addMoney', true);
+            
+            try {
+                const response = await fetch(`/api/wallet/${currentUser.id}/add`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        amount: amount.toString(),
+                        payment_id: paymentId,
+                        payment_method: 'razorpay'
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    currentUser.wallet_balance = data.balance;
+                    localStorage.setItem('proWarUser', JSON.stringify(currentUser));
+                    document.getElementById('userBalance').textContent = `₹${data.balance}`;
+                    
+                    hideAddMoneyModal();
+                    showSuccess('general', `₹${amount} added successfully!`);
+                } else {
+                    showError('addMoney', data.message);
+                }
+            } catch (error) {
+                showError('addMoney', 'Payment processing failed. Please try again.');
+            }
+            
+            setLoading('addMoney', false);
+        }
+
+        // Game functions
+        function playGame(gameType) {
+            const gameTitle = gameType === 'ludo' ? 'Ludo Master' : 'Mines';
+            const gameUrl = `/games/${gameType}/index.html`;
+            
+            document.getElementById('gameTitle').textContent = gameTitle;
+            document.getElementById('gameFrame').src = gameUrl;
+            document.getElementById('gameModal').classList.remove('hidden');
+        }
+
+        function hideGameModal() {
+            document.getElementById('gameModal').classList.add('hidden');
+            document.getElementById('gameFrame').src = '';
+        }
+
+        // Utility functions
+        function setLoading(type, loading) {
+            const button = document.getElementById(`${type}ButtonText`);
+            const spinner = document.getElementById(`${type}Loading`);
+            const form = document.getElementById(`${type}FormElement`) || document.getElementById(`${type}Form`);
+            
+            if (loading) {
+                button.style.display = 'none';
+                spinner.classList.remove('hidden');
+                if (form) {
+                    const submitBtn = form.querySelector('button[type="submit"]');
+                    if (submitBtn) submitBtn.disabled = true;
+                }
+            } else {
+                button.style.display = 'inline';
+                spinner.classList.add('hidden');
+                if (form) {
+                    const submitBtn = form.querySelector('button[type="submit"]');
+                    if (submitBtn) submitBtn.disabled = false;
+                }
+            }
+        }
+
+        function showError(type, message) {
+            const errorDiv = document.getElementById(`${type}Error`);
+            const errorText = document.getElementById(`${type}ErrorText`);
+            
+            if (errorDiv && errorText) {
+                errorText.textContent = message;
+                errorDiv.classList.remove('hidden');
+            }
+        }
+
+        function hideError(type) {
+            const errorDiv = document.getElementById(`${type}Error`);
+            if (errorDiv) {
+                errorDiv.classList.add('hidden');
+            }
+        }
+
+        function showSuccess(type, message) {
+            const errorDiv = document.getElementById(`${type}Error`);
+            if (errorDiv) {
+                errorDiv.className = 'success-message';
+                errorDiv.querySelector('span').textContent = message;
+                errorDiv.querySelector('i').className = 'fas fa-check-circle mr-2';
+                errorDiv.classList.remove('hidden');
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('proWarUser');
+            currentUser = null;
+            
+            document.getElementById('authSection').classList.remove('hidden');
+            document.getElementById('dashboardSection').classList.add('hidden');
+            
+            // Clear forms
+            document.getElementById('loginFormElement').reset();
+            document.getElementById('signupFormElement').reset();
+            showLoginForm();
+            
+            // Stop banner slider
+            if (slideInterval) {
+                clearInterval(slideInterval);
+            }
+        }
+    </script>
 </body>
-    </html>
-    
+</html>

@@ -39,7 +39,7 @@
             border: 1px solid var(--glass-border);
         }
 
-        /* Splash Screen */
+        /* Splash Screen - UPDATED */
         #splash-screen {
             position: fixed;
             top: 0;
@@ -52,7 +52,7 @@
             justify-content: center;
             align-items: center;
             z-index: 9999;
-            animation: fadeOut 2.5s ease-in-out 2s forwards;
+            animation: fadeOut 0.5s ease-in-out 2.5s forwards; /* Fades out after 2.5s */
         }
 
         @keyframes fadeOut {
@@ -66,13 +66,23 @@
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
-            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
-            animation: glow 1.5s ease-in-out infinite alternate;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); /* Removed glow, added subtle shadow */
+            animation: logo-intro 1.5s ease-out forwards; /* New intro animation */
         }
 
-        @keyframes glow {
-            from { text-shadow: 0 0 10px rgba(255, 215, 0, 0.5); }
-            to { text-shadow: 0 0 20px rgba(255, 215, 0, 0.8), 0 0 30px rgba(255, 215, 0, 0.6); }
+        @keyframes logo-intro {
+            0% {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+            60% {
+                transform: scale(1.1);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
         }
 
         /* Auth Screens */
@@ -144,7 +154,7 @@
         }
 
         .error-message {
-            color: #ff6b6b;
+            color: #ff6b6b; /* Default to red for errors */
             font-size: 0.9rem;
             margin-top: -0.5rem;
             margin-bottom: 1rem;
@@ -821,7 +831,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => {
                 checkAuth();
-            }, 3000);
+            }, 3000); // Wait for splash screen to finish
         });
 
         // Auth Event Listeners
@@ -873,59 +883,58 @@
             await fetchUserProfile();
         });
 
-    signupForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const email = document.getElementById('signup-email').value;
-    const password = document.getElementById('signup-password').value;
-    const username = document.getElementById('signup-username').value;
-    
-    const { data: authData, error: authError } = await supabase.auth.signUp({
-        email,
-        password
-    });
+        // UPDATED SIGNUP FORM EVENT LISTENER
+        signupForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('signup-email').value;
+            const password = document.getElementById('signup-password').value;
+            const username = document.getElementById('signup-username').value;
 
-    if (authError) {
-        signupError.textContent = authError.message;
-        return;
-    }
+            // First sign up with email and password
+            const { data: authData, error: authError } = await supabase.auth.signUp({
+                email,
+                password
+            });
 
-    // 🔥 Insert into 'profiles' table (Add this block below)
-    const { user } = authData;
-    const { error: insertError } = await supabase.from("profiles").insert({
-        id: user.id,
-        username: username,
-        email: email, // ✅ VERY IMPORTANT
-        is_admin: false,
-        is_owner: false,
-        wallet_balance: 0
-    });
+            if (authError) {
+                signupError.style.color = '#ff6b6b'; // Red for error
+                signupError.textContent = authError.message;
+                return;
+            }
 
-    if (insertError) {
-        signupError.textContent = insertError.message;
-        return;
-    }
+            // Then create a profile in the profiles table
+            const { user } = authData;
+            const { error: insertError } = await supabase.from("profiles").insert({
+                id: user.id,
+                username: username,
+                email: email, // Storing email in profile as well
+                is_admin: false,
+                is_owner: false,
+                wallet_balance: 0
+            });
 
-    // Optional: Show success message or redirect
-    signupError.textContent = "Signup successful! Please check your email to verify.";
-});
+            if (insertError) {
+                signupError.style.color = '#ff6b6b'; // Red for error
+                signupError.textContent = insertError.message;
+                return;
+            }
 
-            // Show success message and redirect to login
-            signupError.textContent = '';
+            // Show success message in green
             signupError.style.color = '#4CAF50';
-            signupError.textContent = 'Account created successfully! Please login.';
-            
+            signupError.textContent = "Signup successful! Please check your email to verify.";
+
             // Clear form
+            document.getElementById('signup-username').value = '';
             document.getElementById('signup-email').value = '';
             document.getElementById('signup-password').value = '';
-            document.getElementById('signup-username').value = '';
-            
-            // Show login after 2 seconds
+
+            // Redirect to login page after a delay
             setTimeout(() => {
                 signupContainer.style.display = 'none';
                 loginContainer.style.display = 'flex';
-                signupError.textContent = '';
-                signupError.style.color = '#ff6b6b';
-            }, 2000);
+                signupError.textContent = ''; // Clear message
+                signupError.style.color = '#ff6b6b'; // Reset color for future errors
+            }, 3000);
         });
 
         forgotForm.addEventListener('submit', async (e) => {
@@ -1204,6 +1213,11 @@
 
             if (error) {
                 console.error('Error fetching profile:', error);
+                // This could happen if a user signs up but the profile creation fails.
+                // We should probably log them out or show an error.
+                // For now, we'll just log it and prevent the app from loading.
+                supabase.auth.signOut();
+                showAuthScreen();
                 return;
             }
 
@@ -1338,6 +1352,10 @@
             }
 
             transactionsList.innerHTML = '';
+            if (data.length === 0) {
+                transactionsList.innerHTML = `<div style="text-align: center; color: #aaa; padding: 1rem 0;">No transactions yet.</div>`;
+                return;
+            }
             data.forEach(transaction => {
                 const item = document.createElement('div');
                 item.className = 'transaction-item';
